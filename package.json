@@ -95,7 +95,10 @@
       "category": "Utility"
     }
   },
-  "repository": "https://github.com/wallace5303/ee.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wallace5303/ee.git"
+  },
   "keywords": [
     "Electron"
   ],
@@ -114,6 +117,11 @@
     "dayjs": "^1.10.7",
     "ee-core": "^1.2.6",
     "electron-is": "^3.0.0",
-    "lodash": "^4.17.21"
-  }
+    "lodash": "^4.17.21",
+    "sharp": "^0.30.6"
+  },
+  "bugs": {
+    "url": "https://github.com/wallace5303/ee/issues"
+  },
+  "homepage": "https://github.com/wallace5303/ee#readme"
 }

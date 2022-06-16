@@ -2,13 +2,13 @@
   <div id="app-base-test-api">
     <div class="one-block-1">
       <span>
-        1. 测试一些操作系统api
+        1. opencv.js测试
       </span>
     </div>  
     <div class="one-block-2">
       <a-space>
-        <a-button @click="exec(1)"> 点击 </a-button>
-        <a-button @click="exec2(1)"> 点击2 </a-button>
+        <a-button @click="handleInvoke"> opencv </a-button>
+        结果：{{ message }}
       </a-space>
     </div>
   </div>
@@ -20,6 +20,7 @@ export default {
   data() {
     return {
       type: 1,
+      message: '',
     };
   },
   methods: {
@@ -38,6 +39,11 @@ export default {
       requestHttp(ipcApiRoute.test, params).then(res => {
         console.log('res2:', res)
       }) 
+    },
+    async handleInvoke () {
+      const msg = await this.$ipcInvoke(ipcApiRoute.ipcInvokeMsgOpenCV, '异步');
+      console.log('msg:', msg);
+      this.message = msg;
     },    
   }
 };

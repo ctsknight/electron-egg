@@ -594,7 +594,23 @@ class ExampleController extends Controller {
    */ 
   hello (args) {
     console.log('hello ', args);
-  }   
+  }
+  
+  /**
+   * 异步消息类型
+   * @param args 前端传的参数
+   * @param event - IpcMainInvokeEvent 文档：https://www.electronjs.org/zh/docs/latest/api/structures/ipc-main-invoke-event
+   */ 
+   async ipcInvokeMsgOpenCV (args, event) {
+    let timeNow = dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+    const params = args;
+    const result = await this.service.image.getImage(args);
+    
+    const data =  result.msg+ ' - ' + timeNow;
+    
+    return data;
+  } 
 }
 
 module.exports = ExampleController;

@@ -25,6 +25,7 @@ const ipcApiRoute = {
   doHttpRequest: 'controller.example.doHttpRequest',
   doSocketRequest: 'controller.example.doSocketRequest',
   ipcInvokeMsg: 'controller.example.ipcInvokeMsg',
+  ipcInvokeMsgOpenCV: 'controller.example.ipcInvokeMsgOpenCV',
   ipcSendSyncMsg: 'controller.example.ipcSendSyncMsg',
   ipcSendMsg: 'controller.example.ipcSendMsg',
   hello: 'controller.example.hello',
