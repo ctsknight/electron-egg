@@ -6,3 +6,4 @@
 exports.testConfig = {
   login: 'http://local.com/api/login',
 };
+

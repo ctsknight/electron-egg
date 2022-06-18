@@ -8,7 +8,7 @@
     <div class="one-block-2">
       <a-space>
         <a-button @click="handleInvoke"> opencv </a-button>
-        结果：{{ message }}
+        <img :src="imageUrl" />
       </a-space>
     </div>
   </div>
@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       type: 1,
-      message: '',
+      imageUrl: '',
     };
   },
   methods: {
@@ -42,8 +42,8 @@ export default {
     },
     async handleInvoke () {
       const msg = await this.$ipcInvoke(ipcApiRoute.ipcInvokeMsgOpenCV, '异步');
-      console.log('msg:', msg);
-      this.message = msg;
+      this.imageUrl = 'scanner-file-protocol://'+msg;
+      console.log(this.imageUrl);
     },    
   }
 };

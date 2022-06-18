@@ -1,4 +1,6 @@
 const Appliaction = require('ee-core').Appliaction;
+const { app, protocol } = require('electron');
+const path = require('path');
 
 class Main extends Appliaction {
 
@@ -18,7 +20,7 @@ class Main extends Appliaction {
    * electron app ready
    */
   async electronAppReady () {
-    // do some things
+  
   }
 
   /**
@@ -26,6 +28,19 @@ class Main extends Appliaction {
    */
   async windowReady () {
     // do some things
+
+    protocol.registerFileProtocol('scanner-file-protocol', (request, callback) => {
+      const url = request.url
+        .replace('scanner-file-protocol://', '')
+        .replace(/(.*)(#t=.*)/, '$1') // remove "#t=*" query at the end (used in video paths)
+        console.log(url)
+      try {
+        callback({ path: path.normalize(`${url}`) })
+      }
+      catch (error) {
+        console.error(error)
+      }
+    })
 
   }
 

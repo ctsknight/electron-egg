@@ -602,14 +602,12 @@ class ExampleController extends Controller {
    * @param event - IpcMainInvokeEvent 文档：https://www.electronjs.org/zh/docs/latest/api/structures/ipc-main-invoke-event
    */ 
    async ipcInvokeMsgOpenCV (args, event) {
-    let timeNow = dayjs().format('YYYY-MM-DD HH:mm:ss');
+    let timeNow = dayjs().valueOf();
 
     const params = args;
-    const result = await this.service.image.getImage(args);
-    
-    const data =  result.msg+ ' - ' + timeNow;
-    
-    return data;
+    const result = await this.service.image.getImage(args, timeNow);
+        
+    return result.msg;
   } 
 }
 

@@ -33,9 +33,9 @@ class ImageService extends Service {
     /**
    * getImageInfo
    */
-     async getImage (args) {
-      let input = __dirname+'\\'+'output.tif';
-      let output = __dirname+'\\'+'output.png';
+     async getImage (args, timeNow) {
+      let input = __dirname+'/'+'output.tif';
+      let output = __dirname+'/'+timeNow+'.png';
       const image = await sharp(input)
         .resize(1920)
         .toFile(output);
