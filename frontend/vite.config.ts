@@ -31,7 +31,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
         },
       },
       // TODO 构建包含@charset问题 https://github.com/vitejs/vite/issues/5833
-      charset: false,
+      // charset: false,
       postcss: {
         plugins: [
           {
@@ -118,7 +118,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       // 设置代理，根据项目实际情况配置
       proxy: {
         '/api': {
-          target: 'https://nest-api.buqiyuan.site/api/admin/',
+          target: '',
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace('/api/', '/'),

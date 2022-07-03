@@ -4,6 +4,8 @@ module.exports = {
   customSyntax: 'postcss-html',
   extends: ['stylelint-config-standard', 'stylelint-config-prettier'],
   rules: {
+    semi: 'off',
+    '@typescript-eslint/semi': ['error'],
     'selector-class-pattern': null,
     'selector-pseudo-class-no-unknown': [
       true,

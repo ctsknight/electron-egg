@@ -1,30 +1,21 @@
 <template>
   <div class="simulator-container">
-    <button @click="handleInvoke">Scan</button>
-    <img :src="imageUrl" />
+    <img :src="store.currentImage" />
   </div>
 </template>
 
 <script lang="tsx">
-  import { defineComponent, ref, getCurrentInstance } from 'vue';
+  import { scannerStore } from '@/store/scan';
+  import { defineComponent } from 'vue';
 
   export default defineComponent({
     name: 'SimulatorEditor',
     components: {},
     emits: ['on-selected'],
     setup() {
-      const imageUrl = ref('scanner-file-protocol://');
-      const app = getCurrentInstance();
-      const handleInvoke = async () => {
-        const msg = await app.appContext.config.globalProperties.$invoke(
-          'controller.example.ipcInvokeMsgOpenCV',
-          '异步',
-        );
-        imageUrl.value = 'scanner-file-protocol://' + msg;
-      };
+      const store = scannerStore();
       return {
-        imageUrl,
-        handleInvoke,
+        store,
       };
     },
   });

@@ -5,23 +5,24 @@
  * @description：useGlobalProperties
  * @update: 2021/5/3 21:13
  */
-import { getCurrentInstance } from 'vue'
-import { RouteLocationNormalizedLoaded, Router } from 'vue-router'
+import { getCurrentInstance } from 'vue';
+import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
 
 interface GlobalProperties {
-  $$refs: any
-  $route: RouteLocationNormalizedLoaded
-  $router: Router
+  $$refs: any;
+  $ipcInvoke: (channel: any, param: any) => Promise<string>;
+  $route: RouteLocationNormalizedLoaded;
+  $router: Router;
 }
 
 export const useGlobalProperties = () => {
   const globalProperties = getCurrentInstance()!.appContext.config
-    .globalProperties as GlobalProperties
+    .globalProperties as GlobalProperties;
 
-  const registerRef = (el, _vid: string) => el && (globalProperties.$$refs[_vid] = el)
+  const registerRef = (el, _vid: string) => el && (globalProperties.$$refs[_vid] = el);
 
   return {
     globalProperties,
-    registerRef
-  }
-}
+    registerRef,
+  };
+};
