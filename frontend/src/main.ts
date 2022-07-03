@@ -9,8 +9,8 @@ import 'virtual:windi.css';
 import 'virtual:windi-devtools';
 import 'animate.css';
 
-import router from './router/';
-import { setupStore } from './store/';
+import router from './router';
+import { setupStore } from './store';
 
 import invoke from './api/ipcRenderer';
 
@@ -24,7 +24,7 @@ setupElementPlus(app);
 setupVant(app);
 
 app.config.globalProperties.$$refs = {};
-app.config.globalProperties.$invoke = invoke;
+app.config.globalProperties.$ipcInvoke = invoke;
 
 // if (import.meta.env.DEV) {
 window.$$refs = app.config.globalProperties.$$refs;
