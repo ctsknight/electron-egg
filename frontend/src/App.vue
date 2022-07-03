@@ -1,27 +1,27 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+  <el-config-provider :locale="zhCn">
+    <router-view #="{ Component, route }">
+      <component :is="Component" :key="route.path" />
+    </router-view>
+  </el-config-provider>
 </template>
 
-<script>
-export default {
-  name: 'App',
-  components: {},
-  data() {
-    return {};
-  },
-  watch: {},
-  methods: {}
-}
+<script setup lang="ts">
+import { provide } from 'vue'
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import { initVisualData, injectKey, localKey } from '@/visual-editor/hooks/useVisualData'
+
+const visualData = initVisualData()
+// 注入可视化编辑器所有配置
+provide(injectKey, visualData)
+
+const { jsonData } = visualData
+
+window.addEventListener('beforeunload', () => {
+  sessionStorage.setItem(localKey, JSON.stringify(jsonData))
+})
 </script>
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  height: 100%;
-}
+
+<style lang="scss">
+@import 'style/common';
 </style>
