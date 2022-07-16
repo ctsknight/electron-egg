@@ -33,7 +33,7 @@ class ImageService extends Service {
     /**
    * getImageInfo
    */
-     async getImage (args, timeNow) {
+    async scanImage (args, timeNow) {
       let input = __dirname+'/../resource/original/output.tif';
       let output = __dirname+'/../resource/converter/'+timeNow+'.png';
       const image = await sharp(input)

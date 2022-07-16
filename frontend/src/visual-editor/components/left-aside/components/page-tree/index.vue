@@ -85,7 +85,7 @@
   const scanImage = async () => {
     const app = getCurrentInstance();
     const scanStore = scannerStore();
-    const imageurl = await invoke('controller.example.ipcInvokeMsgOpenCV', '异步');
+    const imageurl = await invoke('controller.imagemanager.ipcScanImage', '异步');
     scanStore.setCurrentImage(imageurl);
   };
   // 点击当前节点
