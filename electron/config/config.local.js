@@ -3,7 +3,7 @@
 /*
  * test
  */
-exports.testConfig = {
-  login: 'http://local.com/api/login',
+exports.testConfig = () => {
+  
 };
 

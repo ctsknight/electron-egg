@@ -1,15 +1,14 @@
-'use strict';
+"use strict";
 
-const Service = require('ee-core').Service;
-//const cv = require('../library/opencv');
-const sharp = require('sharp');
+const Service = require("ee-core").Service;
+// const cv = require('../library/opencv');
+const sharp = require("sharp");
 
 /**
  * image服务
  * @class
  */
 class ImageService extends Service {
-
   constructor(ctx) {
     super(ctx);
   }
@@ -17,35 +16,30 @@ class ImageService extends Service {
   /**
    * getOpencvInfo
    */
-  async getOpencvInfo (args) {
+  async getOpencvInfo(args) {
     let obj = {
-      status:'ok',
+      status: "ok",
       params: args,
-      msg: cv.getBuildInformation()
-    }
+      msg: cv.getBuildInformation(),
+    };
 
     return obj;
   }
 
-
-
-
-    /**
-   * getImageInfo
+  /**
+   * scanImage(args, timeNow)
    */
-    async scanImage (args, timeNow) {
-      let input = __dirname+'/../resource/original/output.tif';
-      let output = __dirname+'/../resource/converter/'+timeNow+'.png';
-      const image = await sharp(input)
-        .resize(1920)
-        .toFile(output);
-      let obj = {
-        status:'ok',
-        params: args,
-        msg: output
-      }
-      return obj;        
-    }
+  async scanImage(args, imageDir, timeNow) {
+    let input = imageDir + "original/output.tif";
+    let output = imageDir + "converter/" + timeNow + ".png";
+    const image = await sharp(input).resize(1920).toFile(output);
+    let obj = {
+      status: "ok",
+      params: args,
+      msg: output,
+    };
+    return obj;
+  }
 }
 
 module.exports = ImageService;

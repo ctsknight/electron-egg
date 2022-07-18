@@ -26,7 +26,6 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item :icon="Edit" @click="editPage(data)">编辑</el-dropdown-item>
                 <el-dropdown-item :icon="Delete" @click="delPage(data)">删除</el-dropdown-item>
                 <el-dropdown-item :icon="Link" @click="setDefaultPage(data)"
                   >设为首页</el-dropdown-item
@@ -41,8 +40,6 @@
 </template>
 
 <script lang="tsx">
-  import { Tickets } from '@element-plus/icons-vue';
-
   export default {
     name: 'PageTree',
     label: '页面',
@@ -85,8 +82,9 @@
   const scanImage = async () => {
     const app = getCurrentInstance();
     const scanStore = scannerStore();
-    const imageurl = await invoke('controller.imagemanager.ipcScanImage', '异步');
-    scanStore.setCurrentImage(imageurl);
+    // const imageurl = await invoke('controller.imagemanager.ipcScanImage', '异步');
+    // scanStore.setCurrentImage(imageurl);
+    console.log(await invoke('controller.imagemanager.getAllScanedImages', undefined));
   };
   // 点击当前节点
   const handleNodeClick = (data) => {

@@ -51,6 +51,7 @@ class Main extends Appliaction {
     // do some things
 
   }
+
 }
 
 new Main();
