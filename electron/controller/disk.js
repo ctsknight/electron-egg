@@ -8,7 +8,7 @@ const { exec } = require('child_process');
 const Controller = require('ee-core').Controller;
 const Utils = require('ee-core').Utils;
 const electronApp = require('electron').app;
-const {dialog, webContents, shell, BrowserWindow, BrowserView, 
+const {dialog, shell, BrowserWindow, BrowserView, 
   Notification, powerMonitor, screen, nativeTheme} = require('electron');
 const autoLaunchManager = require('../library/autoLaunch');
 const dayjs = require('dayjs');
@@ -21,7 +21,7 @@ let notificationObj = null;
  * 示例控制器
  * @class
  */
-class ExampleController extends Controller {
+class  DiskController extends Controller {
 
   constructor(ctx) {
     super(ctx);
@@ -598,4 +598,4 @@ class ExampleController extends Controller {
 
 }
 
-module.exports = ExampleController;
+module.exports = DiskController;

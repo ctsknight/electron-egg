@@ -6,9 +6,9 @@ const { ipcRenderer: ipc } = (window.require && window.require('electron')) || {
  * @param param
  * @returns {Promise}
  */
-const invoke = (channel: any, param: any) => {
+const ipcInvoke = (channel: any, param: any) => {
   const message = ipc.invoke(channel, param);
   return message;
 };
 
-export default invoke;
+export default ipcInvoke;

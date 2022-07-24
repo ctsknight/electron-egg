@@ -8,17 +8,6 @@ const { exec } = require("child_process");
 const Controller = require("ee-core").Controller;
 const Utils = require("ee-core").Utils;
 const electronApp = require("electron").app;
-const {
-  dialog,
-  webContents,
-  shell,
-  BrowserWindow,
-  BrowserView,
-  Notification,
-  powerMonitor,
-  screen,
-  nativeTheme,
-} = require("electron");
 const autoLaunchManager = require("../library/autoLaunch");
 const dayjs = require("dayjs");
 const { times } = require("lodash");
@@ -31,7 +20,7 @@ let notificationObj = null;
  * 示例控制器
  * @class
  */
-class ImageManagerController extends Controller {
+class ImageController extends Controller {
   constructor(ctx) {
     super(ctx);
     const config = Utils.getCoreDB().getItem("config");
@@ -71,9 +60,9 @@ class ImageManagerController extends Controller {
       timeNow
     );
 
-    console.log("ipcScanImage: " + result.msg);
+    console.log("ipcScanImage : " + result.msg);
     return result.msg;
   }
 }
 
-module.exports = ImageManagerController;
+module.exports = ImageController;

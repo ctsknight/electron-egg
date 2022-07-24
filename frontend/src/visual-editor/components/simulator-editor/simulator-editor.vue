@@ -1,11 +1,11 @@
 <template>
   <div class="simulator-container">
-    <img :src="store.currentImage" />
+    <img :src="store.workSpaceUrl" />
   </div>
 </template>
 
 <script lang="tsx">
-  import { scannerStore } from '@/store/scan';
+  import { useWorkSpaceStore } from '@/store/workspace';
   import { defineComponent } from 'vue';
 
   export default defineComponent({
@@ -13,7 +13,7 @@
     components: {},
     emits: ['on-selected'],
     setup() {
-      const store = scannerStore();
+      const store = useWorkSpaceStore();
       return {
         store,
       };

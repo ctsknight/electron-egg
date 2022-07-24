@@ -1,11 +1,11 @@
 {
   "name": "ee",
-  "version": "2.1.4",
+  "version": "2.1.6",
   "description": "A fast, desktop software development framework",
   "main": "main.js",
   "scripts": {
     "start": "electron . ",
-    "dev": "electron . --env=local",
+    "dev": "electron . --env=local --hot-reload=1",
     "reload": "nodemon",
     "test": "set DEBUG=* && electron . --env=local",
     "build-w": "electron-builder -w --ia32",
@@ -13,9 +13,11 @@
     "build-m": "electron-builder -m",
     "build-m-arm64": "electron-builder -m --arm64",
     "build-l": "electron-builder -l",
-    "rd": "node ./node_modules/ee-core/bin/tools rd --dist_dir=./frontend/dist",
-    "compress": "node ./node_modules/ee-core/bin/tools compress",
-    "restore": "node ./node_modules/ee-core/bin/tools restore"
+    "rd": "ee-core rd --dist_dir=./frontend/dist",
+    "compress": "ee-core compress",
+    "restore": "ee-core restore",
+    "rebuild": "electron-rebuild",
+    "re-sqlite": "electron-rebuild -f -w better-sqlite3"
   },
   "nodemonConfig": {
     "watch": [
@@ -95,10 +97,7 @@
       "category": "Utility"
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wallace5303/ee.git"
-  },
+  "repository": "https://github.com/wallace5303/ee.git",
   "keywords": [
     "Electron"
   ],
@@ -107,7 +106,8 @@
   "devDependencies": {
     "debug": "^4.3.3",
     "electron": "^13.6.9",
-    "electron-builder": "^23.0.3",
+    "electron-builder": "^23.1.0",
+    "electron-rebuild": "^3.2.8",
     "eslint": "^5.13.0",
     "eslint-config-egg": "^7.1.0",
     "eslint-plugin-prettier": "^3.0.1",
@@ -115,13 +115,8 @@
   },
   "dependencies": {
     "dayjs": "^1.10.7",
-    "ee-core": "^1.2.6",
+    "ee-core": "^1.2.8",
     "electron-is": "^3.0.0",
-    "lodash": "^4.17.21",
-    "sharp": "^0.30.6"
-  },
-  "bugs": {
-    "url": "https://github.com/wallace5303/ee/issues"
-  },
-  "homepage": "https://github.com/wallace5303/ee#readme"
+    "lodash": "^4.17.21"
+  }
 }
