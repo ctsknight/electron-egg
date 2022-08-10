@@ -7,18 +7,24 @@
  * @FilePath: \vite-vue3-lowcode\src\visual-editor\components\right-attribute-panel\components\attr-editor\index.tsx
  */
 import { defineComponent, computed, watch } from 'vue';
-import { ElForm, ElFormItem, ElPopover, ElRadioGroup, ElRadioButton, ElIcon } from 'element-plus';
+import { ElForm, ElFormItem, ElButton } from 'element-plus';
 import { useVisualData } from '@/visual-editor/hooks/useVisualData';
-import { FormatInputNumber } from '@/visual-editor/components/common/format-input-number';
-import { PropConfig } from './components/prop-config';
-import { Warning } from '@element-plus/icons-vue';
-
+import { EditPen } from '@element-plus/icons-vue';
+import { useWorkSpaceStore } from '@/store/workspace';
+import { storeToRefs } from 'pinia';
 export const AttrEditor = defineComponent({
   setup() {
-    const { visualConfig, currentBlock } = useVisualData();
+    const { currentBlock } = useVisualData();
 
     const compPaddingAttrs = ['paddingTop', 'paddingLeft', 'paddingRight', 'paddingBottom'];
 
+    const workspaceStore = useWorkSpaceStore();
+
+    const { workspace } = storeToRefs(workspaceStore);
+
+    const changeWorkspacePath = () => {
+      workspaceStore.changeWorkspace();
+    };
     /**
      * @description 监听组件padding值的变化
      */
@@ -50,82 +56,14 @@ export const AttrEditor = defineComponent({
     // 表单项
     const FormEditor = () => {
       const content: JSX.Element[] = [];
-      if (currentBlock.value) {
-        const { componentKey } = currentBlock.value;
-        const component = visualConfig.componentMap[componentKey];
-        console.log('props.block:', currentBlock.value);
-        content.push(
-          <>
-            <ElFormItem label="组件ID" labelWidth={'76px'}>
-              {currentBlock.value._vid}
-              <ElPopover
-                width={200}
-                trigger="hover"
-                effect="dark"
-                content={`你可以利用该组件ID。对该组件进行获取和设置其属性，组件可用属性可在控制台输入：$$refs.${currentBlock.value._vid} 进行查看`}
-              >
-                {{
-                  reference: () => (
-                    <ElIcon class={'ml-6px'}>
-                      <Warning />
-                    </ElIcon>
-                  ),
-                }}
-              </ElPopover>
-            </ElFormItem>
-          </>,
-        );
-        if (!!component) {
-          if (!!component.props) {
-            content.push(<PropConfig component={component} block={currentBlock.value} />);
-            {
-              currentBlock.value.showStyleConfig &&
-                content.push(
-                  <ElFormItem label={'组件对齐方式'} labelWidth={'90px'}>
-                    <ElRadioGroup v-model={currentBlock.value.styles.justifyContent}>
-                      <ElRadioButton label="flex-start">{'左对齐'}</ElRadioButton>
-                      <ElRadioButton label="center">{'居中'}</ElRadioButton>
-                      <ElRadioButton label="flex-end">{'右对齐'}</ElRadioButton>
-                    </ElRadioGroup>
-                  </ElFormItem>,
-                  <ElFormItem class={'flex flex-col justify-start'}>
-                    {{
-                      label: () => (
-                        <div class={'flex justify-between mb-2'}>
-                          <div class="mr-3">组件内边距</div>
-                          <FormatInputNumber v-model={compPadding.value} class={'!w-100px'} />
-                        </div>
-                      ),
-                      default: () => (
-                        <div
-                          class={'grid grid-cols-3 gap-2 w-full bg-gray-100 p-20px items-center'}
-                        >
-                          <FormatInputNumber
-                            v-model={currentBlock.value.styles.paddingTop}
-                            class={'!w-100px col-span-full col-start-2'}
-                          />
-                          <FormatInputNumber
-                            v-model={currentBlock.value.styles.paddingLeft}
-                            class={'!w-100px col-span-1'}
-                          />
-                          <div class={'bg-white col-span-1 h-40px'}></div>
-                          <FormatInputNumber
-                            v-model={currentBlock.value.styles.paddingRight}
-                            class={'!w-100px col-span-1'}
-                          />
-                          <FormatInputNumber
-                            v-model={currentBlock.value.styles.paddingBottom}
-                            class={'!w-100px col-span-full col-start-2'}
-                          />
-                        </div>
-                      ),
-                    }}
-                  </ElFormItem>,
-                );
-            }
-          }
-        }
-      }
+      content.push(
+        <>
+          <ElFormItem label="当前工作目录:" labelWidth={'100px'}>
+            <ElButton type="primary" icon={EditPen} circle onClick={() => changeWorkspacePath()} />
+          </ElFormItem>
+          {workspace.value}
+        </>,
+      );
       return (
         <>
           <ElForm labelPosition={'left'}>{content}</ElForm>

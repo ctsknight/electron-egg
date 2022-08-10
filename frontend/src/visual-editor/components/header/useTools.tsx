@@ -8,7 +8,6 @@
 import { reactive } from 'vue';
 import { ElMessage, ElRadio, ElRadioGroup } from 'element-plus';
 import { useQRCode } from '@vueuse/integrations';
-import { useClipboard } from '@vueuse/core';
 import { useVisualData, localKey } from '@/visual-editor/hooks/useVisualData';
 import { useModal } from '@/visual-editor/hooks/useModal';
 import MonacoEditor from '@/visual-editor/components/common/monaco-editor/MonacoEditor';
@@ -20,7 +19,7 @@ import {
   Position,
   Delete,
   ChatLineSquare,
-  Download,
+  Printer,
   Upload,
 } from '@element-plus/icons-vue';
 import 'element-plus/es/components/message/style/css';
@@ -36,6 +35,13 @@ export const useTools = () => {
   };
 
   return [
+    {
+      title: 'Scan',
+      icon: Printer,
+      onClick: () => {
+        console.log('scann');
+      },
+    },
     {
       title: '导入JSON',
       icon: Upload,
@@ -78,17 +84,6 @@ export const useTools = () => {
             });
           },
         });
-      },
-    },
-    {
-      title: '导出JSON',
-      icon: Download,
-      onClick: () => {
-        const { copy } = useClipboard({ source: JSON.stringify(jsonData) });
-
-        copy()
-          .then(() => ElMessage.success('复制成功'))
-          .catch((err) => ElMessage.error(`复制失败：${err}`));
       },
     },
     {

@@ -1,20 +1,5 @@
 <!--页面树-->
-<template>
-  <el-button type="primary" class="!my-10px !mx-6px" :icon="Plus">Scan</el-button>
-  <span>当前工作目录：{{ workspace }} </span>
-  <el-dropdown trigger="click">
-    <span class="el-dropdown-link">
-      <el-icon><more-filled /></el-icon>
-    </span>
-    <template #dropdown>
-      <el-dropdown-menu>
-        <el-dropdown-item :icon="Edit" @click="changeWorkspacePath"
-          >更改Workspace地址</el-dropdown-item
-        >
-      </el-dropdown-menu>
-    </template>
-  </el-dropdown>
-</template>
+<template> TODO: show all images </template>
 
 <script lang="tsx">
   export default {

@@ -1,6 +1,6 @@
 <template>
   <div class="simulator-container">
-    <img :src="store.workSpaceUrl" />
+    <img :src="store.currentImageUrl" />
   </div>
 </template>
 

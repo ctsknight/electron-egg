@@ -6,10 +6,11 @@ export const useWorkSpaceStore = defineStore({
   state: () => {
     return {
       workspace: '',
+      images: [],
     };
   },
   getters: {
-    workSpaceUrl: (state) => {
+    currentImageUrl: (state) => {
       return 'scanner-file-protocol://' + state.workspace;
     },
   },
