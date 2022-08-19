@@ -14,13 +14,7 @@
   import { defineComponent, reactive, toRefs } from 'vue';
   import { useVModel } from '@vueuse/core';
   import { BASE_URL } from '@/visual-editor/utils';
-  /**
-   * @name: preview
-   * @author: 卜启缘
-   * @date: 2021/4/29 23:09
-   * @description：preview
-   * @update: 2021/4/29 23:09
-   */
+
   export default defineComponent({
     name: 'Preview',
     props: {

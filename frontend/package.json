@@ -49,6 +49,7 @@
     "universal-cookie": "^4.0.4",
     "vant": "3.4.1",
     "vue": "3.2.26",
+    "vue-pdf-embed": "^1.1.4",
     "vue-router": "^4.0.12",
     "vuedraggable": "^4.1.0"
   },

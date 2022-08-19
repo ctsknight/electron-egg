@@ -33,7 +33,6 @@ class Main extends Appliaction {
       const url = request.url
         .replace('scanner-file-protocol://', '')
         .replace(/(.*)(#t=.*)/, '$1') // remove "#t=*" query at the end (used in video paths)
-        console.log(url)
       try {
         callback({ path: path.normalize(`${url}`) })
       }

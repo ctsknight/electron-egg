@@ -1,24 +1,17 @@
 <template>
   <div class="simulator-container">
-    <img :src="store.currentImageUrl" />
+    <vue-pdf-embed :source="currentImage?.path" v-if="currentImage?.format == '.pdf'" />
+    <img :src="currentImage?.path" v-else />
   </div>
 </template>
 
-<script lang="tsx">
+<script lang="ts" setup>
   import { useWorkSpaceStore } from '@/store/workspace';
-  import { defineComponent } from 'vue';
+  import { storeToRefs } from 'pinia';
+  import VuePdfEmbed from 'vue-pdf-embed';
 
-  export default defineComponent({
-    name: 'SimulatorEditor',
-    components: {},
-    emits: ['on-selected'],
-    setup() {
-      const store = useWorkSpaceStore();
-      return {
-        store,
-      };
-    },
-  });
+  const store = useWorkSpaceStore();
+  const { currentImage } = storeToRefs(store);
 </script>
 <style lang="scss" scoped>
   @import './func.scss';

@@ -23,8 +23,6 @@ let notificationObj = null;
 class ImageController extends Controller {
   constructor(ctx) {
     super(ctx);
-    const config = Utils.getCoreDB().getItem("config");
-    this.imageDir = config.baseDir + "/resources/images/";
   }
 
   /**
@@ -38,11 +36,18 @@ class ImageController extends Controller {
    * @param args 前端传的参数
    * @param event - IpcMainInvokeEvent 文档：https://www.electronjs.org/zh/docs/latest/api/structures/ipc-main-invoke-event
    */
-  async getAllScanedImages(args, event) {
+  async getImagesFromWorkspace(args, event) {
     return fs
-      .readdirSync(this.imageDir+'converter', { withFileTypes: true })
-      .filter((item) => !item.isDirectory())
-      .map((item) => item.name);
+      .readdirSync(args.workspace, { withFileTypes: true })
+      .filter((item) => !item.isDirectory()&& path.extname(item.name).match(/\.(jpe?g|png|gif|tiff|pdf|svg|bmp)$/))
+      .map((item) =>  {
+        return {
+          name: item.name,
+          path: 'scanner-file-protocol://' + args.workspace + '/' + item.name,
+          size: fs.statSync(path.join(args.workspace, item.name)).size,
+          format: path.extname(item.name)
+        };
+      });
   }
 
   /**
@@ -51,7 +56,6 @@ class ImageController extends Controller {
    * @param event - IpcMainInvokeEvent 文档：https://www.electronjs.org/zh/docs/latest/api/structures/ipc-main-invoke-event
    */
   async ipcScanImage(args, event) {
-    let timeNow = dayjs().valueOf();
 
     const params = args;
     const result = await this.service.image.scanImage(

@@ -1,5 +1,9 @@
 <!--页面树-->
-<template> TODO: show all images </template>
+<template>
+  <div style="margin: 10px" v-for="image in images" :key="image.name">
+    <thumbnail-show :image="image" />
+  </div>
+</template>
 
 <script lang="tsx">
   export default {
@@ -11,18 +15,14 @@
 </script>
 
 <script lang="tsx" setup>
-  import { Tickets, Edit, Plus, MoreFilled } from '@element-plus/icons-vue';
+  import { Tickets } from '@element-plus/icons-vue';
   import { useWorkSpaceStore } from '@/store/workspace';
   import { storeToRefs } from 'pinia';
+  import ThumbnailShow from './thumbnail-show.vue';
 
   const workspaceStore = useWorkSpaceStore();
 
-  const { workspace } = storeToRefs(workspaceStore);
-  // 设置为默认页面
-  const changeWorkspacePath = () => {
-    console.log('更改工作目录1');
-    workspaceStore.changeWorkspace();
-  };
+  const { images } = storeToRefs(workspaceStore);
 </script>
 
 <style lang="scss" scoped>
