@@ -47,13 +47,13 @@ export default defineComponent({
               stretch={true}
               class={styles.tabs}
             >
-              <ElTabPane label="属性" name="attr">
+              <ElTabPane label="设置" name="attr">
                 <AttrEditor />
               </ElTabPane>
-              <ElTabPane label="动画" name="animate" lazy>
+              <ElTabPane label="设置1" name="animate" lazy>
                 <Animate />
               </ElTabPane>
-              <ElTabPane label="事件" name="events">
+              <ElTabPane label="设置2" name="events">
                 <EventAction />
               </ElTabPane>
               {currentBlock.value.label?.startsWith('表单') ? (

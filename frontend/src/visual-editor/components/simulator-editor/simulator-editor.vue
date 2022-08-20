@@ -1,7 +1,12 @@
 <template>
   <div class="simulator-container">
-    <vue-pdf-embed :source="currentImage?.path" v-if="currentImage?.format == '.pdf'" />
-    <img :src="currentImage?.path" v-else />
+    <!--vue-pdf-embed :source="currentImage?.path" v-if="currentImage?.format == '.pdf'" /-->
+    <main class="main">
+      <editor v-if="currentImage" ref="editor" :data="currentImage" />
+      <div v-else>
+        <el-icon><Picture /></el-icon>
+      </div>
+    </main>
   </div>
 </template>
 
@@ -9,10 +14,14 @@
   import { useWorkSpaceStore } from '@/store/workspace';
   import { storeToRefs } from 'pinia';
   import VuePdfEmbed from 'vue-pdf-embed';
+  import { Picture } from '@element-plus/icons-vue';
+  import Editor from './components/editor.vue';
 
   const store = useWorkSpaceStore();
   const { currentImage } = storeToRefs(store);
+  const data = computed(() => {});
 </script>
+
 <style lang="scss" scoped>
   @import './func.scss';
 
@@ -20,7 +29,6 @@
     display: flex;
     width: 100%;
     height: 100%;
-    padding-right: 380px;
     align-items: center;
     justify-content: center;
 
@@ -29,56 +37,12 @@
     }
   }
 
-  .simulator-editor {
-    width: 660px;
-    height: 740px;
-    min-width: 660px;
-    padding: 60px 150px 0;
-    overflow: hidden auto;
-    background: #fafafa;
-    border-radius: 5px;
-    box-sizing: border-box;
-    background-clip: content-box;
-    contain: layout;
-
-    &::-webkit-scrollbar {
-      width: 0;
-    }
-
-    &-content {
-      min-height: 100%;
-      transform: translate(0);
-      box-shadow: 0 8px 12px #ebedf0;
-    }
-  }
-
-  .list-group-item {
-    position: relative;
-    padding: 3px;
-    cursor: move;
-
-    > div {
-      position: relative;
-    }
-
-    &.focus {
-      @include showComponentBorder;
-    }
-
-    &.drag::after {
-      display: none;
-    }
-
-    &:not(.has-slot) {
-      content: '';
-    }
-
-    &.focusWithChild {
-      @include showContainerBorder;
-    }
-
-    i {
-      cursor: pointer;
-    }
+  .main {
+    background-color: #333;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 3rem;
   }
 </style>

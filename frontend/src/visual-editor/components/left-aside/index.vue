@@ -7,8 +7,10 @@
  * @FilePath: \vite-vue3-lowcode\src\visual-editor\components\left-aside\index.vue
 -->
 <template>
-  <el-tabs v-model="activeName" tab-position="left" class="left-aside">
-    <template v-for="tabItem in tabs" :key="tabItem.name">
+  <el-tabs v-model="activeTab.name" tab-position="left" class="left-aside">
+    <component :is="activeTab.comp" v-bind="$attrs" />
+
+    <!--template v-for="tabItem in tabs" :key="tabItem.name">
       <el-tab-pane :name="tabItem.name" lazy>
         <template #label>
           <div class="tab-item">
@@ -16,9 +18,8 @@
             {{ tabItem.label }}
           </div>
         </template>
-        <component :is="tabItem.comp" v-bind="$attrs" />
-      </el-tab-pane>
-    </template>
+      </l-tab-pane>
+    </template-->
   </el-tabs>
 </template>
 
@@ -42,7 +43,8 @@
     })
     .sort((a, b) => a.order - b.order);
 
-  const activeName = ref(tabs[0].name);
+  //const activeName = ref(tabs[0].name);
+  const activeTab = ref(tabs[0]);
 </script>
 
 <style lang="scss" scoped>
