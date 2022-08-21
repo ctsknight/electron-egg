@@ -5,7 +5,7 @@
  * @description：tools
  * @update: 2021/5/7 10:46
  */
-import { reactive } from 'vue';
+import { reactive, inject } from 'vue';
 import { ElMessage, ElRadio, ElRadioGroup } from 'element-plus';
 import { useQRCode } from '@vueuse/integrations';
 import { useVisualData, localKey } from '@/visual-editor/hooks/useVisualData';
@@ -33,13 +33,14 @@ export const useTools = () => {
   const importJsonChange = (value) => {
     state.importJsonValue = value;
   };
-
+  const emitter = inject('emitter');
+  console.log('emitter: ' + emitter);
   return [
     {
       title: 'Scan',
       icon: Printer,
       onClick: () => {
-        console.log('scann');
+        emitter.emit('editor-action', 'zoom-in');
       },
     },
     {

@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+import mitt from 'mitt';
 
 import { setupElementPlus } from './plugins/element-plus';
 import { setupVant } from './plugins/vant';
@@ -11,7 +12,7 @@ import 'animate.css';
 
 import router from './router';
 import { setupStore } from './store';
-
+const emitter = mitt();
 const app = createApp(App);
 
 // 配置store
@@ -22,7 +23,7 @@ setupElementPlus(app);
 setupVant(app);
 
 app.config.globalProperties.$$refs = {};
-
+app.provide('emitter', emitter);
 // if (import.meta.env.DEV) {
 window.$$refs = app.config.globalProperties.$$refs;
 // }

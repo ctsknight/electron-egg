@@ -1,31 +1,35 @@
 <template>
   <div class="editor">
     <div class="canvas" @dblclick="dblclick">
-      <img ref="image" :alt="data.name" :src="data.path" @loadstart="start" @load="start" />
+      <img ref="image" :alt="data.name" :src="data.url" @loadstart="start" @load="start" />
     </div>
-    <div v-if="cropper" class="toolbar" @click="click">
-      <button class="toolbar__button" data-action="move" title="Move (M)">
+    <div v-if="cropper" class="toolbar">
+      <button class="toolbar__button" @click="click('move')" title="Move (M)">
         <el-icon><Picture /></el-icon>
       </button>
-      <button class="toolbar__button" data-action="crop" title="Crop (C)">
-        <span class="fa fa-crop" />
+      <button class="toolbar__button" @click="click('crop')" title="Crop (C)">
+        <el-icon><Crop /></el-icon>
       </button>
-      <button class="toolbar__button" data-action="zoom-in" title="Zoom In (I)">
-        <span class="fa fa-search-plus" />
+      <button class="toolbar__button" @click="click('zoom-in')" title="Zoom In (I)">
+        <el-icon><CirclePlus /></el-icon>
       </button>
-      <button class="toolbar__button" data-action="zoom-out" title="Zoom Out (O)">
-        <span class="fa fa-search-minus" />
+      <button class="toolbar__button" @click="click('zoom-out')" title="Zoom Out (O)">
+        <el-icon><CircleMinus /></el-icon>
       </button>
-      <button class="toolbar__button" data-action="rotate-left" title="Rotate Left (L)">
-        <span class="fa fa-rotate-left" />
+      <button class="toolbar__button" @click="click('rotate-left')" title="Rotate Left (L)">
+        <el-icon><RefreshLeft /></el-icon>
       </button>
-      <button class="toolbar__button" data-action="rotate-right" title="Rotate Right (R)">
-        <span class="fa fa-rotate-right" />
+      <button class="toolbar__button" @click="click('rotate-right')" title="Rotate Right (R)">
+        <el-icon><RefreshRight /></el-icon>
       </button>
-      <button class="toolbar__button" data-action="flip-horizontal" title="Flip Horizontal (H)">
+      <button
+        class="toolbar__button"
+        @clicke="click('flip-horizontal')"
+        title="Flip Horizontal (H)"
+      >
         <span class="fa fa-arrows-h" />
       </button>
-      <button class="toolbar__button" data-action="flip-vertical" title="Flip Vertical (V)">
+      <button class="toolbar__button" @click="click('flip-vertical')" title="Flip Vertical (V)">
         <span class="fa fa-arrows-v" />
       </button>
     </div>
@@ -33,19 +37,24 @@
 </template>
 
 <script>
+  import { inject } from 'vue';
   import Cropper from 'cropperjs';
   import 'cropperjs/dist/cropper.css';
-  import { Picture } from '@element-plus/icons-vue';
+  import { Picture, Crop, CirclePlus, RefreshLeft, RefreshRight } from '@element-plus/icons-vue';
 
   export default {
     name: 'Editor',
+    components: { Picture, Crop, CirclePlus, RefreshLeft, RefreshRight },
     props: {
       data: {
         type: Object,
         default: () => ({}),
       },
     },
-    components: { Picture },
+    setup() {
+      const emitter = inject('emitter');
+      return { emitter };
+    },
     data() {
       return {
         canvasData: null,
@@ -55,18 +64,19 @@
       };
     },
     mounted() {
-      console.log(this.data.name);
       window.addEventListener('keydown', (this.onKeydown = this.keydown.bind(this)));
+      this.emitter.on('editor-action', (action) => {
+        this.click(action);
+      });
     },
     beforeDestroy() {
       window.removeEventListener('keydown', this.onKeydown);
       this.stop();
     },
     methods: {
-      click({ target }) {
+      click(action) {
         const { cropper } = this;
-        const action =
-          target.getAttribute('data-action') || target.parentElement.getAttribute('data-action');
+        console.log(action);
         switch (action) {
           case 'move':
           case 'crop':
@@ -188,6 +198,7 @@
         if (data.cropped || this.cropper) {
           return;
         }
+        console.log('cropper started');
         this.cropper = new Cropper(this.$refs.image, {
           autoCrop: false,
           dragMode: 'move',
