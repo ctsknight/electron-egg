@@ -1,172 +1,237 @@
-/**
- * @name: tools
- * @author: 卜启缘
- * @date: 2021/5/7 10:46
- * @description：tools
- * @update: 2021/5/7 10:46
- */
 import { reactive, inject } from 'vue';
-import { ElMessage, ElRadio, ElRadioGroup } from 'element-plus';
-import { useQRCode } from '@vueuse/integrations';
-import { useVisualData, localKey } from '@/visual-editor/hooks/useVisualData';
-import { useModal } from '@/visual-editor/hooks/useModal';
-import MonacoEditor from '@/visual-editor/components/common/monaco-editor/MonacoEditor';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import {
-  DocumentCopy,
-  Cellphone,
+  ZoomIn,
+  ZoomOut,
+  SuccessFilled,
   RefreshLeft,
   RefreshRight,
-  Position,
-  Delete,
-  ChatLineSquare,
-  Printer,
-  Upload,
+  Refresh,
+  Switch,
+  Sort,
+  Crop,
+  Download,
+  RemoveFilled,
 } from '@element-plus/icons-vue';
 import 'element-plus/es/components/message/style/css';
 
 export const useTools = () => {
-  const { jsonData, updatePage, currentPage, overrideProject } = useVisualData();
-  const state = reactive({
-    coverRadio: 'current',
-    importJsonValue: '',
-  });
-  const importJsonChange = (value) => {
-    state.importJsonValue = value;
-  };
   const emitter = inject('emitter');
-  console.log('emitter: ' + emitter);
+  const state = reactive({
+    loaded: false,
+    cropped: false,
+    cropping: false,
+  });
+  emitter.on('editor-update', (data) => {
+    console.log(data);
+    state.loaded = data.loaded;
+    state.cropped = data.cropped;
+    state.cropping = data.cropping;
+  });
   return [
     {
-      title: 'Scan',
-      icon: Printer,
+      title: '剪切',
+      icon: Crop,
       onClick: () => {
+        if (!state.loaded) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
+        emitter.emit('editor-action', 'crop');
+      },
+      isShow: () => {
+        return state.loaded;
+      },
+    },
+    {
+      title: '放大',
+      icon: ZoomIn,
+      onClick: () => {
+        if (!state.loaded) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
         emitter.emit('editor-action', 'zoom-in');
       },
-    },
-    {
-      title: '导入JSON',
-      icon: Upload,
-      onClick: () => {
-        useModal({
-          title: '导入JSON',
-          props: {
-            width: 642,
-          },
-          content: () => (
-            <>
-              <ElRadioGroup v-model={state.coverRadio}>
-                <ElRadio label="current">覆盖当前页面</ElRadio>
-                <ElRadio label="all">覆盖整个项目</ElRadio>
-              </ElRadioGroup>
-              <MonacoEditor
-                onChange={importJsonChange}
-                code={JSON.stringify(jsonData)}
-                layout={{ width: 600, height: 600 }}
-              />
-            </>
-          ),
-          onConfirm: () => {
-            const isCoverCurrent = state.coverRadio == 'current';
-            // 覆盖当前页面
-            if (isCoverCurrent) {
-              updatePage({
-                oldPath: currentPage.value.path,
-                page: JSON.parse(state.importJsonValue),
-              });
-            } else {
-              // 覆盖整个项目
-              overrideProject(JSON.parse(state.importJsonValue));
-            }
-            ElMessage({
-              showClose: true,
-              type: 'success',
-              duration: 2000,
-              message: isCoverCurrent ? '成功覆盖当前页面' : '成功覆盖整个项目',
-            });
-          },
-        });
+      isShow: () => {
+        return state.loaded;
       },
     },
     {
-      title: '真机预览',
-      icon: Cellphone,
+      title: '缩小',
+      icon: ZoomOut,
       onClick: () => {
-        const qrcode = useQRCode(location.origin + '/preview');
-        useModal({
-          title: '预览二维码（暂不可用）',
-          props: {
-            width: 300,
-          },
-          footer: null,
-          content: () => (
-            <div class={'flex justify-center'}>
-              <img width={220} height={220} src={qrcode.value} />
-            </div>
-          ),
-        });
+        if (!state.loaded) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
+        emitter.emit('editor-action', 'zoom-out');
+      },
+      isShow: () => {
+        return state.loaded;
       },
     },
     {
-      title: '复制页面',
-      icon: DocumentCopy,
-      onClick: () => {
-        ElMessage({
-          showClose: true,
-          type: 'info',
-          duration: 2000,
-          message: '敬请期待！',
-        });
-      },
-    },
-    {
-      title: '撤销',
+      title: '左旋',
       icon: RefreshLeft,
       onClick: () => {
-        ElMessage({
-          showClose: true,
-          type: 'info',
-          duration: 2000,
-          message: '敬请期待！',
-        });
+        if (!state.loaded) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
+        emitter.emit('editor-action', 'rotate-left');
+      },
+      isShow: () => {
+        return state.loaded;
       },
     },
     {
-      title: '重做',
+      title: '右旋',
       icon: RefreshRight,
       onClick: () => {
-        ElMessage({
-          showClose: true,
-          type: 'info',
-          duration: 2000,
-          message: '敬请期待！',
-        });
+        if (!state.loaded) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
+        emitter.emit('editor-action', 'rotate-right');
+      },
+      isShow: () => {
+        return state.loaded;
       },
     },
     {
-      title: '清空页面',
-      icon: Delete,
+      title: '左右置换',
+      icon: Switch,
       onClick: () => {
-        ElMessage({
-          showClose: true,
-          type: 'info',
-          duration: 2000,
-          message: '敬请期待！',
-        });
+        if (!state.loaded) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
+        emitter.emit('editor-action', 'flip-horizontal');
+      },
+      isShow: () => {
+        return state.loaded;
       },
     },
     {
-      title: '预览',
-      icon: Position,
+      title: '上下置换',
+      icon: Sort,
       onClick: () => {
-        localStorage.setItem(localKey, JSON.stringify(jsonData));
-        window.open(location.href.replace('/#/', '/preview/#/'));
+        if (!state.loaded) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
+        emitter.emit('editor-action', 'flip-vertical');
+      },
+      isShow: () => {
+        return state.loaded;
       },
     },
     {
-      title: '反馈',
-      icon: ChatLineSquare,
+      title: '清除',
+      icon: RemoveFilled,
       onClick: () => {
-        window.open('https://github.com/buqiyuan/vite-vue3-lowcode/issues/new');
+        if (!state.cropping) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
+        emitter.emit('editor-action', 'clear');
+      },
+      isShow: () => {
+        return state.cropping;
+      },
+    },
+    {
+      title: '操作完成',
+      icon: SuccessFilled,
+      onClick: () => {
+        if (!state.cropping) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
+        emitter.emit('editor-action', 'finished');
+      },
+      isShow: () => {
+        return state.cropping;
+      },
+    },
+    {
+      title: '重置',
+      icon: Refresh,
+      onClick: () => {
+        if (!state.cropped) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
+        emitter.emit('editor-action', 'restore');
+      },
+      isShow: () => {
+        return state.cropped;
+      },
+    },
+
+    {
+      title: '保存本地',
+      icon: Download,
+      onClick: () => {
+        if (!state.loaded) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
+        ElMessageBox.confirm('确认保存已修改图片?', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+        })
+          .then(() => {
+            emitter.emit('editor-action', 'save');
+            ElMessage({
+              type: 'success',
+              message: '保存成功',
+            });
+          })
+          .catch(() => {
+            ElMessage({
+              type: 'info',
+              message: '保存取消',
+            });
+          });
+      },
+      isShow: () => {
+        return state.loaded;
       },
     },
   ];

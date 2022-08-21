@@ -3,36 +3,6 @@
     <div class="canvas" @dblclick="dblclick">
       <img ref="image" :alt="data.name" :src="data.url" @loadstart="start" @load="start" />
     </div>
-    <div v-if="cropper" class="toolbar">
-      <button class="toolbar__button" @click="click('move')" title="Move (M)">
-        <el-icon><Picture /></el-icon>
-      </button>
-      <button class="toolbar__button" @click="click('crop')" title="Crop (C)">
-        <el-icon><Crop /></el-icon>
-      </button>
-      <button class="toolbar__button" @click="click('zoom-in')" title="Zoom In (I)">
-        <el-icon><CirclePlus /></el-icon>
-      </button>
-      <button class="toolbar__button" @click="click('zoom-out')" title="Zoom Out (O)">
-        <el-icon><CircleMinus /></el-icon>
-      </button>
-      <button class="toolbar__button" @click="click('rotate-left')" title="Rotate Left (L)">
-        <el-icon><RefreshLeft /></el-icon>
-      </button>
-      <button class="toolbar__button" @click="click('rotate-right')" title="Rotate Right (R)">
-        <el-icon><RefreshRight /></el-icon>
-      </button>
-      <button
-        class="toolbar__button"
-        @clicke="click('flip-horizontal')"
-        title="Flip Horizontal (H)"
-      >
-        <span class="fa fa-arrows-h" />
-      </button>
-      <button class="toolbar__button" @click="click('flip-vertical')" title="Flip Vertical (V)">
-        <span class="fa fa-arrows-v" />
-      </button>
-    </div>
   </div>
 </template>
 
@@ -40,11 +10,9 @@
   import { inject } from 'vue';
   import Cropper from 'cropperjs';
   import 'cropperjs/dist/cropper.css';
-  import { Picture, Crop, CirclePlus, RefreshLeft, RefreshRight } from '@element-plus/icons-vue';
 
   export default {
     name: 'Editor',
-    components: { Picture, Crop, CirclePlus, RefreshLeft, RefreshRight },
     props: {
       data: {
         type: Object,
@@ -66,7 +34,7 @@
     mounted() {
       window.addEventListener('keydown', (this.onKeydown = this.keydown.bind(this)));
       this.emitter.on('editor-action', (action) => {
-        this.click(action);
+        this.doAction(action);
       });
     },
     beforeDestroy() {
@@ -74,7 +42,7 @@
       this.stop();
     },
     methods: {
-      click(action) {
+      doAction(action) {
         const { cropper } = this;
         console.log(action);
         switch (action) {
@@ -99,6 +67,15 @@
             break;
           case 'flip-vertical':
             cropper.scaleY(-cropper.getData().scaleY || -1);
+            break;
+          case 'clear':
+            this.clear();
+            break;
+          case 'restore':
+            this.restore();
+            break;
+          case 'finished':
+            this.crop();
             break;
           default:
         }
@@ -199,6 +176,9 @@
           return;
         }
         console.log('cropper started');
+        this.update({
+          loaded: true,
+        });
         this.cropper = new Cropper(this.$refs.image, {
           autoCrop: false,
           dragMode: 'move',
@@ -284,6 +264,11 @@
       },
       update(data) {
         Object.assign(this.data, data);
+        this.emitter.emit('editor-update', {
+          loaded: true,
+          cropped: data.cropped,
+          cropping: data.cropping,
+        });
       },
     },
   };
@@ -334,5 +319,3 @@
     }
   }
 </style>
-Footer © 2022 GitHub, Inc. Footer navigation Terms Privacy Security Status Docs Contact GitHub
-Pricing API Training Blog About

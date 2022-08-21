@@ -10,14 +10,16 @@
     <el-col class="flex items-center" :span="12">
       <template v-for="(toolItem, toolIndex) in tools" :key="toolIndex">
         <div :class="[`w-1/${tools.length}`]" class="w-1/9">
-          <div
-            class="tool-item flex flex-col items-center cursor-pointer"
-            @click="toolItem.onClick"
-          >
-            <el-icon>
-              <component :is="toolItem.icon" />
-            </el-icon>
-            <div class="title">{{ toolItem.title }}</div>
+          <div :class="{ disabled: !toolItem.isShow() }">
+            <div
+              class="tool-item flex flex-col items-center cursor-pointer"
+              @click="toolItem.onClick"
+            >
+              <el-icon>
+                <component :is="toolItem.icon" />
+              </el-icon>
+              <div class="title">{{ toolItem.title }}</div>
+            </div>
           </div>
         </div>
       </template>
@@ -90,6 +92,10 @@
 
     .right-tools > * {
       margin-left: 8px;
+    }
+
+    .disabled {
+      color: gray;
     }
   }
 </style>
