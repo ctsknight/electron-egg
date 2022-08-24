@@ -1,5 +1,5 @@
 <template>
-  <el-card @click="changeCurrentImage(image)">
+  <el-card shadow="hover" @click="changeCurrentImage(image)">
     <vue-pdf-embed :source="image.path" :page="1" v-if="image.format == '.pdf'" />
     <el-image :src="image.path" fit="fill" v-else>
       <template #placeholder>
@@ -7,7 +7,7 @@
       </template>
       <template #error>
         <div class="image-slot">
-          <el-icon><Picture /></el-icon>
+          <el-icon :size="150"><Picture /></el-icon>
         </div>
       </template>
     </el-image>

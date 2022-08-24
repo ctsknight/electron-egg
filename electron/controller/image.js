@@ -45,7 +45,7 @@ class ImageController extends Controller {
           name: item.name,
           path: 'scanner-file-protocol://' + args.workspace + '/' + item.name,
           size: fs.statSync(path.join(args.workspace, item.name)).size,
-          format: path.extname(item.name)
+          format: path.extname(item.name).substring(1)
         };
       });
   }

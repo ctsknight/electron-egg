@@ -6,8 +6,8 @@
  * @Description: 组件属性编辑器
  * @FilePath: \vite-vue3-lowcode\src\visual-editor\components\right-attribute-panel\components\attr-editor\index.tsx
  */
-import { defineComponent, computed, watch } from 'vue';
-import { ElForm, ElFormItem, ElButton } from 'element-plus';
+import { defineComponent, computed, watch, reactive } from 'vue';
+import { ElForm, ElFormItem, ElButton, ElInput, ElCard } from 'element-plus';
 import { useVisualData } from '@/visual-editor/hooks/useVisualData';
 import { EditPen } from '@element-plus/icons-vue';
 import { useWorkSpaceStore } from '@/store/workspace';
@@ -19,6 +19,11 @@ export const AttrEditor = defineComponent({
     const compPaddingAttrs = ['paddingTop', 'paddingLeft', 'paddingRight', 'paddingBottom'];
 
     const workspaceStore = useWorkSpaceStore();
+
+    const imageInfo = reactive({
+      format: '',
+      resolution: '',
+    });
 
     const { workspace } = storeToRefs(workspaceStore);
 
@@ -62,6 +67,9 @@ export const AttrEditor = defineComponent({
             <ElButton type="primary" icon={EditPen} circle onClick={() => changeWorkspacePath()} />
           </ElFormItem>
           {workspace.value}
+          <ElFormItem label="背景图片">
+            <ElInput v-model={imageInfo.resolution} placeholder={'图片地址'} clearable />
+          </ElFormItem>
         </>,
       );
       return (

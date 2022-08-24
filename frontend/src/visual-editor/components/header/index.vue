@@ -3,7 +3,7 @@
     <!--    左侧logo start-->
     <el-col :span="6" class="flex items-center">
       <div class="logo"></div>
-      <h3 class="font-semibold">Microbox Scanner</h3>
+      <!--h3 class="font-semibold">Microbox Scanner</h3-->
     </el-col>
     <!--    左侧logo end-->
     <!--    中间操作页面部分 start-->
@@ -27,10 +27,10 @@
     <!--    中间操作页面部分 end-->
     <!--    右侧工具栏 start-->
     <el-col :span="6" class="right-tools flex flex-row-reverse items-center">
-      <el-tooltip class="item" effect="dark" content="预览" placement="bottom">
+      <el-tooltip class="item" effect="dark" content="扫描" placement="bottom">
         <el-button
           type="primary"
-          :icon="VideoPlay"
+          :icon="CameraFilled"
           size="large"
           circle
           class="flex-shrink-0 !p-6px"
@@ -52,7 +52,7 @@
   import Preview from './preview.vue';
   import { useVisualData, localKey } from '@/visual-editor/hooks/useVisualData';
   import { useTools } from './useTools';
-  import { VideoPlay } from '@element-plus/icons-vue';
+  import { CameraFilled } from '@element-plus/icons-vue';
 
   const isShowH5Preview = ref(false);
 
@@ -72,8 +72,8 @@
     width: 100%;
 
     .logo {
-      width: 60px;
-      height: 60px;
+      width: 200px;
+      height: 80px;
       background-image: url('@/assets/logo.png');
       background-repeat: no-repeat;
       background-size: contain;

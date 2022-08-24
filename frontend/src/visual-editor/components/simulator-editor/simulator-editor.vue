@@ -3,8 +3,8 @@
     <!--vue-pdf-embed :source="currentImage?.path" v-if="currentImage?.format == '.pdf'" /-->
     <main class="main">
       <editor v-if="imageData.loaded" :data="imageData" ref="editorRef" />
-      <div v-else>
-        <el-icon><Picture /></el-icon>
+      <div class="center-screen" v-else>
+        <el-icon :size="700" color="#FFFFFF"><PictureFilled /></el-icon>
       </div>
     </main>
   </div>
@@ -15,14 +15,14 @@
   import { useWorkSpaceStore } from '@/store/workspace';
   import { storeToRefs } from 'pinia';
   import VuePdfEmbed from 'vue-pdf-embed';
-  import { Picture } from '@element-plus/icons-vue';
+  import { PictureFilled } from '@element-plus/icons-vue';
   import Editor from './components/editor.vue';
 
   export default {
     components: {
       VuePdfEmbed,
       Editor,
-      Picture,
+      PictureFilled,
     },
     setup() {
       const store = useWorkSpaceStore();
@@ -50,6 +50,7 @@
           this.imageData.url = newValue.path;
           this.imageData.loaded = true;
           console.log(this.imageData);
+          this.$refs.editorRef?.start();
         }
       },
     },
@@ -77,5 +78,18 @@
     position: absolute;
     right: 0;
     top: 0;
+  }
+  .center-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+  }
+  span {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    font-size: large;
   }
 </style>

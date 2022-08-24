@@ -1,6 +1,11 @@
 <!--页面树-->
 <template>
-  <div style="margin: 10px" v-for="image in images" :key="image.name">
+  <el-card v-if="!isShow" style="margin: 10px" shadow="always">
+    <div style="padding: 14px">
+      <span>暂无图片显示</span>
+    </div>
+  </el-card>
+  <div style="margin: 10px" v-for="image in images" :key="image.name" v-else>
     <thumbnail-show :image="image" />
   </div>
 </template>
@@ -15,7 +20,7 @@
 </script>
 
 <script lang="tsx" setup>
-  import { Tickets } from '@element-plus/icons-vue';
+  import { Tickets, PictureFilled } from '@element-plus/icons-vue';
   import { useWorkSpaceStore } from '@/store/workspace';
   import { storeToRefs } from 'pinia';
   import ThumbnailShow from './thumbnail-show.vue';
@@ -23,6 +28,8 @@
   const workspaceStore = useWorkSpaceStore();
 
   const { images } = storeToRefs(workspaceStore);
+
+  const isShow = computed(() => images && images.value.length > 0);
 </script>
 
 <style lang="scss" scoped>
