@@ -35,6 +35,18 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElTree: typeof import('element-plus/es')['ElTree']
     InfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
+    VanButton: typeof import('vant/es')['Button']
+    VanCell: typeof import('vant/es')['Cell']
+    VanCellGroup: typeof import('vant/es')['CellGroup']
+    VanDivider: typeof import('vant/es')['Divider']
+    VanField: typeof import('vant/es')['Field']
+    VanForm: typeof import('vant/es')['Form']
+    VanIcon: typeof import('vant/es')['Icon']
+    VanRadio: typeof import('vant/es')['Radio']
+    VanRadioGroup: typeof import('vant/es')['RadioGroup']
+    VanSpace: typeof import('vant/es')['Space']
+    VanSwitch: typeof import('vant/es')['Switch']
+    VanTag: typeof import('vant/es')['Tag']
   }
 }
 

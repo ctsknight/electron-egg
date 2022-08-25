@@ -12,7 +12,9 @@ import { defineComponent, reactive, watch } from 'vue';
 import styles from './index.module.scss';
 import { ElTabPane, ElTabs } from 'element-plus';
 import { useVisualData } from '@/visual-editor/hooks/useVisualData';
-import { AttrEditor, Animate, PageSetting, EventAction, FormRule } from './components';
+import AttrEditor from './components/attr-editor/index.vue';
+import ScannerSetting from './components/scannersetting/index.vue';
+
 import { DArrowLeft, DArrowRight } from '@element-plus/icons-vue';
 
 export default defineComponent({
@@ -47,22 +49,11 @@ export default defineComponent({
               stretch={true}
               class={styles.tabs}
             >
-              <ElTabPane label="设置" name="attr">
+              <ElTabPane label="软件设置" name="attr">
                 <AttrEditor />
               </ElTabPane>
-              <ElTabPane label="设置1" name="animate" lazy>
-                <Animate />
-              </ElTabPane>
-              <ElTabPane label="设置2" name="events">
-                <EventAction />
-              </ElTabPane>
-              {currentBlock.value.label?.startsWith('表单') ? (
-                <ElTabPane label="规则" name="form-rule" lazy>
-                  <FormRule />
-                </ElTabPane>
-              ) : null}
-              <ElTabPane label="页面设置" name="page-setting">
-                <PageSetting />
+              <ElTabPane label="扫描仪设置" name="animate">
+                <ScannerSetting />
               </ElTabPane>
             </ElTabs>
           </div>
