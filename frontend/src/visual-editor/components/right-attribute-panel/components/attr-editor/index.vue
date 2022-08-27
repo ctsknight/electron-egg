@@ -10,7 +10,7 @@
     </van-cell>
     <van-cell title="图片规格" style="margin-top: 30px">
       <template #right-icon>
-        <van-switch v-model="isChangeImageSetting" size="18" />
+        <el-switch v-model="isChangeImageSetting" active-text="修改" inactive-text="保存" />
       </template>
       <template #label>
         <van-cell-group>
@@ -26,7 +26,7 @@
           </van-cell>
           <van-cell center title="分辨率">
             <template #value>
-              <van-radio-group :disabled="!isChangeImageSetting" v-model="imageSetting.resolution">
+              <van-radio-group :disabled="!isChangeImageSetting" v-model="imageResolution">
                 <van-radio name="200">200</van-radio>
                 <van-radio name="300">300</van-radio>
                 <van-radio name="400">400</van-radio>
@@ -41,13 +41,18 @@
 </template>
 
 <script language="ts" setup>
-  import { computed, ref, reactive } from 'vue';
+  import { computed, ref } from 'vue';
 
   import { useWorkSpaceStore } from '@/store/workspace';
   import { storeToRefs } from 'pinia';
   const workspaceStore = useWorkSpaceStore();
 
-  const { workspace } = storeToRefs(workspaceStore);
+  const { workspace, imageSetting } = storeToRefs(workspaceStore);
+  onMounted(async () => {
+    await workspaceStore.retrieveImageSetting();
+    imageResolution.value = imageSetting.value.resolution + '';
+  });
+
   const currentWorkspace = computed(() => {
     if (workspace && workspace.value) {
       return workspace.value;
@@ -60,10 +65,16 @@
   };
 
   const isChangeImageSetting = ref(false);
+  const imageResolution = ref('');
 
-  const imageSetting = reactive({
-    resolution: '200',
-    type: 'png',
+  watch(imageResolution, (newValue) => {
+    imageSetting.value.resolution = parseInt(newValue);
+  });
+
+  watch(isChangeImageSetting, (newValue) => {
+    if (!newValue) {
+      workspaceStore.updateImageSetting();
+    }
   });
 </script>
 

@@ -10,3 +10,17 @@ export interface Thumbnail {
   size: number;
   format?: string;
 }
+
+export interface CroppedArea {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface ImageSetting {
+  type: string;
+  resolution: number;
+  isCrpped: boolean;
+  croppedArea: CroppedArea;
+}

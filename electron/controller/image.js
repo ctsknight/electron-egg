@@ -26,17 +26,13 @@ class ImageController extends Controller {
   }
 
   /**
-   * 所有方法接收两个参数
-   * @param args 前端传的参数
-   * @param event - ipc通信时才有值。invoke()方法时，event == IpcMainInvokeEvent; send()/sendSync()方法时，event == IpcMainEvent
-   */
-
-  /**
    * 异步消息类型
    * @param args 前端传的参数
    * @param event - IpcMainInvokeEvent 文档：https://www.electronjs.org/zh/docs/latest/api/structures/ipc-main-invoke-event
    */
   async getImagesFromWorkspace(args, event) {
+
+    console.log('scannerDB:'+ this.service.storage.getImageSettingData());
     return fs
       .readdirSync(args.workspace, { withFileTypes: true })
       .filter((item) => !item.isDirectory()&& path.extname(item.name).match(/\.(jpe?g|png|gif|tiff|pdf|svg|bmp)$/))
