@@ -24,14 +24,15 @@ class StorageService extends Service {
         resolution: 400,
         isCrpped: false,
         croppedArea: {
-          x: 0,
-          y: 0,
+          left: 0,
+          top: 0,
           with: 0,
           height: 0
         }
       },
       ip: '127.0.0.1',
-      port: '8888'
+      port: '8888',
+      workspace: '',
     };
 
     this.scannerDB.db.defaults(scannerDBKey).write();
@@ -75,6 +76,25 @@ class StorageService extends Service {
   updateIPSettingData(ipData) {
     const data = this.scannerDB.db
     .assign({ip: ipData})
+    .write();
+
+    return data;
+  }
+
+  getWorkspaceSettingData() {
+    let data = this.scannerDB.db
+    .get('workspace')
+    .value();
+
+    if (_.isEmpty(data)) {
+      data = ''
+    }
+
+    return data;
+  }
+  updateWorkspaceSettingData(workspaceData) {
+    const data = this.scannerDB.db
+    .assign({workspace: workspaceData})
     .write();
 
     return data;

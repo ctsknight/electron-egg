@@ -34,6 +34,11 @@ class SettingController extends Controller {
     return this.service.storage.getImageSettingData();
   }
 
+  setImageSetting(args, event) {
+    console.log("setImageSetting", args);
+    this.service.storage.updateImageSettingData(JSON.parse(args.imageSetting));
+  }
+
   getIpSetting(args, event) {
     return this.service.storage.getIPSettingData();
   }
@@ -42,9 +47,13 @@ class SettingController extends Controller {
     console.log("setIpSetting", args);
     this.service.storage.updateIPSettingData(args.ip);
   }
-  setImageSetting(args, event) {
-    console.log("setImageSetting", args);
-    this.service.storage.updateImageSettingData(JSON.parse(args.imageSetting));
+  
+  getWorkspaceSetting(args, event) {
+    return this.service.storage.getWorkspaceSettingData();
+  }
+
+  setWorkspaceSetting(args, event) {
+    this.service.storage.updateWorkspaceSettingData(args.workspace);
   }
 }
 

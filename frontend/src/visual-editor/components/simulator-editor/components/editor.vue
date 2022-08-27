@@ -77,6 +77,9 @@
           case 'finished':
             this.crop();
             break;
+          case 'save':
+            console.log('save finished  ' + JSON.stringify(this.cropBoxData));
+            break;
           default:
         }
       },

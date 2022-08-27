@@ -33,18 +33,24 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
     async changeWorkspace() {
       const path: string = await ipcInvoke('controller.disk.selectFolder', '');
       this.workspace = path;
-
-      this.images = await ipcInvoke('controller.image.getImagesFromWorkspace', {
-        workspace: path,
-      });
-
-      if (this.images.length > 0) {
-        this.currentImage = this.images[0];
-      }
+      ipcInvoke('controller.setting.setWorkspaceSetting', { workspace: path });
     },
 
     changeCurrentImage(image: Thumbnail) {
       this.currentImage = image;
+    },
+
+    async syncImages() {
+      console.log(this.workspace);
+      if (this.workspace) {
+        this.images = await ipcInvoke('controller.image.getImagesFromWorkspace', {
+          workspace: this.workspace,
+        });
+
+        if (this.images.length > 0) {
+          this.currentImage = this.images[0];
+        }
+      }
     },
 
     updateImageSetting() {
@@ -56,6 +62,10 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
     async retrieveImageSetting() {
       this.imageSetting = await ipcInvoke('controller.setting.getImageSetting', '');
       console.log(this.imageSetting);
+    },
+
+    async readWorkspaceFromDB() {
+      this.workspace = await ipcInvoke('controller.setting.getWorkspaceSetting', '');
     },
   },
 });

@@ -204,7 +204,7 @@ export const useTools = () => {
       title: '保存本地',
       icon: Download,
       onClick: () => {
-        if (!state.loaded) {
+        if (!state.cropped) {
           ElMessage({
             type: 'warning',
             message: '无效操作',

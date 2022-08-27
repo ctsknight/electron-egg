@@ -32,7 +32,7 @@ class ImageController extends Controller {
    */
   async getImagesFromWorkspace(args, event) {
 
-    console.log('scannerDB:'+ this.service.storage.getImageSettingData());
+    console.log(args);
     return fs
       .readdirSync(args.workspace, { withFileTypes: true })
       .filter((item) => !item.isDirectory()&& path.extname(item.name).match(/\.(jpe?g|png|gif|tiff|pdf|svg|bmp)$/))

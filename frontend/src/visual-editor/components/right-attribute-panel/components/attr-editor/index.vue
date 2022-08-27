@@ -48,10 +48,6 @@
   const workspaceStore = useWorkSpaceStore();
 
   const { workspace, imageSetting } = storeToRefs(workspaceStore);
-  onMounted(async () => {
-    await workspaceStore.retrieveImageSetting();
-    imageResolution.value = imageSetting.value.resolution + '';
-  });
 
   const currentWorkspace = computed(() => {
     if (workspace && workspace.value) {
@@ -60,9 +56,17 @@
     return '未选择工作目录路径';
   });
 
-  const changeWorkspacePath = () => {
-    workspaceStore.changeWorkspace();
+  const changeWorkspacePath = async () => {
+    await workspaceStore.changeWorkspace();
+    workspaceStore.syncImages();
   };
+
+  onMounted(async () => {
+    await workspaceStore.retrieveImageSetting();
+    imageResolution.value = imageSetting.value.resolution + '';
+    await workspaceStore.readWorkspaceFromDB();
+    workspaceStore.syncImages();
+  });
 
   const isChangeImageSetting = ref(false);
   const imageResolution = ref('');
