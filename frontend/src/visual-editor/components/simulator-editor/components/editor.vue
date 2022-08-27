@@ -57,10 +57,10 @@
             cropper.zoom(-0.1);
             break;
           case 'rotate-left':
-            cropper.rotate(-90);
+            cropper.rotate(-30);
             break;
           case 'rotate-right':
-            cropper.rotate(90);
+            cropper.rotate(30);
             break;
           case 'flip-horizontal':
             cropper.scaleX(-cropper.getData().scaleX || -1);
@@ -78,7 +78,9 @@
             this.crop();
             break;
           case 'save':
-            console.log('save finished  ' + JSON.stringify(this.cropBoxData));
+            console.log('croppedData:  ' + JSON.stringify(this.croppedData));
+            this.$emit('save-event', this.croppedData);
+
             break;
           default:
         }
@@ -149,11 +151,11 @@
             break;
           // Rotate left
           case 'l':
-            cropper.rotate(-90);
+            cropper.rotate(-30);
             break;
           // Rotate right
           case 'r':
-            cropper.rotate(90);
+            cropper.rotate(30);
             break;
           // Flip horizontal
           case 'h':
@@ -200,6 +202,7 @@
           },
           crop: ({ detail }) => {
             if (detail.width > 0 && detail.height > 0 && !data.cropping) {
+              console.log('details:' + JSON.stringify(detail));
               this.update({
                 cropping: true,
               });
@@ -219,6 +222,8 @@
           this.croppedData = cropper.getData();
           this.canvasData = cropper.getCanvasData();
           this.cropBoxData = cropper.getCropBoxData();
+          this.containerData = cropper.getContainerData();
+
           this.update({
             cropped: true,
             cropping: false,

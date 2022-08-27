@@ -231,7 +231,7 @@ export const useTools = () => {
           });
       },
       isShow: () => {
-        return state.loaded;
+        return state.cropped;
       },
     },
   ];

@@ -2,7 +2,7 @@
   <div class="simulator-container">
     <!--vue-pdf-embed :source="currentImage?.path" v-if="currentImage?.format == '.pdf'" /-->
     <main class="main">
-      <editor v-if="imageData.loaded" :data="imageData" ref="editorRef" />
+      <editor v-if="imageData.loaded" :data="imageData" ref="editorRef" @save-event="saveimage" />
       <div class="center-screen" v-else>
         <el-icon :size="700" color="#FFFFFF"><PictureFilled /></el-icon>
       </div>
@@ -17,6 +17,7 @@
   import VuePdfEmbed from 'vue-pdf-embed';
   import { PictureFilled } from '@element-plus/icons-vue';
   import Editor from './components/editor.vue';
+  import ipcInvoke from '@/api/ipcRenderer';
 
   export default {
     components: {
@@ -27,6 +28,7 @@
     setup() {
       const store = useWorkSpaceStore();
       const { currentImage } = storeToRefs(store);
+
       const imageData = ref({
         cropped: false,
         cropping: false,
@@ -39,7 +41,14 @@
 
       const editorRef = ref(null);
 
-      return { currentImage, imageData, editorRef };
+      const saveimage = async (area) => {
+        currentImage.value = await ipcInvoke('controller.image.ipcCropImage', {
+          area: JSON.stringify(area),
+          name: currentImage.value.name,
+        });
+      };
+
+      return { currentImage, imageData, editorRef, saveimage };
     },
     watch: {
       currentImage(newValue, oldValue) {

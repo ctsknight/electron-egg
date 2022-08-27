@@ -32,10 +32,9 @@ class ImageController extends Controller {
    */
   async getImagesFromWorkspace(args, event) {
 
-    console.log(args);
     return fs
       .readdirSync(args.workspace, { withFileTypes: true })
-      .filter((item) => !item.isDirectory()&& path.extname(item.name).match(/\.(jpe?g|png|gif|tiff|pdf|svg|bmp)$/))
+      .filter((item) => !item.isDirectory()&& path.extname(item.name).match(/\.(jpe?g|png|tiff|bmp)$/))
       .map((item) =>  {
         return {
           name: item.name,
@@ -63,6 +62,32 @@ class ImageController extends Controller {
     console.log("ipcScanImage : " + result.msg);
     return result.msg;
   }
+
+  /**
+   * 异步消息类型
+   * @param args 前端传的参数
+   * @param event - IpcMainInvokeEvent 文档：https://www.electronjs.org/zh/docs/latest/api/structures/ipc-main-invoke-event
+   */
+ async ipcCropImage(args, event) {
+
+  console.log('ipcCropImage: ' + JSON.stringify(args));
+  const params = args;
+  const area = JSON.parse(params.area);
+  const imageDir = this.service.storage.getWorkspaceSettingData();
+  await this.service.image.cropImage(
+    {left: Math.round(area.x), top: Math.round(area.y), width: Math.round(area.width), height: Math.round(area.height)},
+    imageDir+'/'+params.name,
+    imageDir+'/cropped_'+params.name
+  );
+
+  return  {
+    name: params.name,
+    path: 'scanner-file-protocol://' + imageDir+'/cropped_'+params.name,
+    size: fs.statSync(path.join(imageDir, params.name)).size,
+    format: path.extname(params.name).substring(1)
+  }
 }
+}
+
 
 module.exports = ImageController;
