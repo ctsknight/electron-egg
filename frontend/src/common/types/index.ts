@@ -4,11 +4,13 @@ export interface NavItem {
   isActive: boolean;
 }
 
-export interface Thumbnail {
+export interface ImageItem {
   name: string;
   path: string;
+  location: string;
   size: number;
   format?: string;
+  thumbnailpath?: string;
 }
 
 export interface CroppedArea {

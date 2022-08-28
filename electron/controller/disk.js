@@ -28,7 +28,7 @@ class  DiskController extends Controller {
   }
 
   /**
-   * 所有方法接收两个参数
+   * 所有方法接收两个参数f
    * @param args 前端传的参数
    * @param event - ipc通信时才有值。invoke()方法时，event == IpcMainInvokeEvent; send()/sendSync()方法时，event == IpcMainEvent
    */
@@ -592,8 +592,9 @@ class  DiskController extends Controller {
   /**
    * 测试接口
    */ 
-  hello (args) {
-    console.log('hello ', args);
+  openFile (args) {
+    console.log('openFile', args);
+    shell.openPath (args.fullpath);
   }
 
 }

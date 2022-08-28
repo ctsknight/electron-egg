@@ -81,6 +81,10 @@
             console.log('croppedData:  ' + JSON.stringify(this.croppedData));
             this.$emit('save-event', this.croppedData);
 
+          case 'preview':
+            console.log('preview:  ');
+            this.$emit('preview-event');
+
             break;
           default:
         }

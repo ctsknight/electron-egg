@@ -12,6 +12,7 @@ import {
   Crop,
   Download,
   RemoveFilled,
+  VideoPlay,
 } from '@element-plus/icons-vue';
 import 'element-plus/es/components/message/style/css';
 
@@ -232,6 +233,16 @@ export const useTools = () => {
       },
       isShow: () => {
         return state.cropped;
+      },
+    },
+    {
+      title: '预览',
+      icon: VideoPlay,
+      onClick: () => {
+        emitter.emit('editor-action', 'preview');
+      },
+      isShow: () => {
+        return state.loaded;
       },
     },
   ];

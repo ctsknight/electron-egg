@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
 import ipcInvoke from '@/api/ipcRenderer';
-import { Thumbnail, ImageSetting } from '@/common/types';
+import { ImageItem, ImageSetting } from '@/common/types';
 
 type WorkspaceState = {
   workspace: string;
-  currentImage: null | Thumbnail;
-  images: Thumbnail[];
+  currentImage: null | ImageItem;
+  images: ImageItem[];
   imageSetting: ImageSetting;
 };
 
@@ -36,7 +36,7 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       ipcInvoke('controller.setting.setWorkspaceSetting', { workspace: path });
     },
 
-    changeCurrentImage(image: Thumbnail) {
+    changeCurrentImage(image: ImageItem) {
       this.currentImage = image;
     },
 

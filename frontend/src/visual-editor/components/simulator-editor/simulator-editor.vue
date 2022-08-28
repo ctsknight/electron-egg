@@ -2,7 +2,13 @@
   <div class="simulator-container">
     <!--vue-pdf-embed :source="currentImage?.path" v-if="currentImage?.format == '.pdf'" /-->
     <main class="main">
-      <editor v-if="imageData.loaded" :data="imageData" ref="editorRef" @save-event="saveimage" />
+      <editor
+        v-if="imageData.loaded"
+        :data="imageData"
+        ref="editorRef"
+        @save-event="saveimage"
+        @preview-event="preview"
+      />
       <div class="center-screen" v-else>
         <el-icon :size="700" color="#FFFFFF"><PictureFilled /></el-icon>
       </div>
@@ -48,7 +54,13 @@
         });
       };
 
-      return { currentImage, imageData, editorRef, saveimage };
+      const preview = () => {
+        ipcInvoke('controller.disk.openFile', {
+          fullpath: currentImage.value?.location,
+        });
+      };
+
+      return { currentImage, imageData, editorRef, saveimage, preview };
     },
     watch: {
       currentImage(newValue, oldValue) {

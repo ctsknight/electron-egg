@@ -21,13 +21,13 @@
 </template>
 
 <script setup lang="ts">
-  import { Thumbnail } from '@/common/types';
+  import { ImageItem } from '@/common/types';
   import { Picture } from '@element-plus/icons-vue';
   import VuePdfEmbed from 'vue-pdf-embed';
   import { useWorkSpaceStore } from '@/store/workspace';
 
   interface Props {
-    image: Thumbnail;
+    image: ImageItem;
   }
   const { image } = defineProps<Props>();
 
@@ -35,7 +35,7 @@
 
   const workspaceStore = useWorkSpaceStore();
 
-  const changeCurrentImage = (image: Thumbnail) => {
+  const changeCurrentImage = (image: ImageItem) => {
     workspaceStore.changeCurrentImage(image);
   };
 </script>
