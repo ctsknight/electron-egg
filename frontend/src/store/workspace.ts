@@ -16,6 +16,7 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       currentImage: null,
       images: [],
       imageSetting: {
+        prefix: 'microbox',
         type: '',
         resolution: 0,
         isCrpped: false,
@@ -52,7 +53,6 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
         }
       }
     },
-
     updateImageSetting() {
       ipcInvoke('controller.setting.setImageSetting', {
         imageSetting: JSON.stringify(this.imageSetting),

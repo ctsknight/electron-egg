@@ -48,7 +48,7 @@
       const editorRef = ref(null);
 
       const saveimage = async (area) => {
-        currentImage.value = await ipcInvoke('controller.image.ipcCropImage', {
+        await ipcInvoke('controller.image.ipcCropImage', {
           area: JSON.stringify(area),
           name: currentImage.value.name,
         });

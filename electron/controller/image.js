@@ -70,25 +70,20 @@ class ImageController extends Controller {
    * @param args 前端传的参数
    * @param event - IpcMainInvokeEvent 文档：https://www.electronjs.org/zh/docs/latest/api/structures/ipc-main-invoke-event
    */
- async ipcCropImage(args, event) {
+   async ipcCropImage(args, event) {
 
-  console.log('ipcCropImage: ' + JSON.stringify(args));
-  const params = args;
-  const area = JSON.parse(params.area);
-  const imageDir = this.service.storage.getWorkspaceSettingData();
-  await this.service.image.cropImage(
-    {left: Math.round(area.x), top: Math.round(area.y), width: Math.round(area.width), height: Math.round(area.height)},
-    imageDir+'/'+params.name,
-    imageDir+'/cropped_'+params.name
-  );
-
-  return  {
-    name: params.name,
-    path: 'scanner-file-protocol://' + imageDir+'/cropped_'+params.name,
-    size: fs.statSync(path.join(imageDir, params.name)).size,
-    format: path.extname(params.name).substring(1)
+    console.log('ipcCropImage: ' + JSON.stringify(args));
+    const params = args;
+    const area = JSON.parse(params.area);
+    const imageDir = this.service.storage.getWorkspaceSettingData();
+    await this.service.image.cropImage(
+      {left: Math.round(area.x), top: Math.round(area.y), width: Math.round(area.width), height: Math.round(area.height)},
+      imageDir+'/'+params.name,
+      imageDir+'/cropped_'+params.name
+    );
+  
+    exec('mv '+imageDir+'/cropped_'+params.name+' '+ imageDir+'/'+params.name);
   }
-}
 }
 
 

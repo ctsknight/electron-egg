@@ -21,6 +21,7 @@ export interface CroppedArea {
 }
 
 export interface ImageSetting {
+  prefix: string;
   type: string;
   resolution: number;
   isCrpped: boolean;

@@ -167,7 +167,7 @@ export const useTools = () => {
       },
     },
     {
-      title: '操作完成',
+      title: '剪切完成',
       icon: SuccessFilled,
       onClick: () => {
         if (!state.cropping) {

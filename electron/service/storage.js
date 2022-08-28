@@ -20,6 +20,7 @@ class StorageService extends Service {
 
     const scannerDBKey = {
       imageSetting: {
+        prefix: 'microbox',
         type: 'jpeg',
         resolution: 400,
         isCrpped: false,
@@ -30,6 +31,7 @@ class StorageService extends Service {
           height: 0
         }
       },
+      pdfExportTypep: 'single',
       ip: '127.0.0.1',
       port: '8888',
       workspace: '',
@@ -76,6 +78,25 @@ class StorageService extends Service {
   updateIPSettingData(ipData) {
     const data = this.scannerDB.db
     .assign({ip: ipData})
+    .write();
+
+    return data;
+  }
+
+  getPDFExportTypeSettingData() {
+    let data = this.scannerDB.db
+    .get('pdfExportTypep')
+    .value();
+
+    if (_.isEmpty(data)) {
+      data = ''
+    }
+
+    return data;
+  }
+  updatePDFExportTypeSettingData(type) {
+    const data = this.scannerDB.db
+    .assign({pdfExportTypep: type})
     .write();
 
     return data;

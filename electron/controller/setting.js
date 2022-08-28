@@ -55,6 +55,15 @@ class SettingController extends Controller {
   setWorkspaceSetting(args, event) {
     this.service.storage.updateWorkspaceSettingData(args.workspace);
   }
+
+  getPdfExportType(args, event) {
+    return this.service.storage.getPDFExportTypeSettingData();
+  }
+
+  setPdfExportType(args, event) {
+    console.log("setPdfExportType", args);
+    this.service.storage.updatePDFExportTypeSettingData(args.pdfExportTypep);
+  }
 }
 
 
