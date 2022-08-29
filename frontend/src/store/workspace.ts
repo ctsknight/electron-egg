@@ -4,7 +4,7 @@ import { ImageItem, ImageSetting } from '@/common/types';
 
 type WorkspaceState = {
   workspace: string;
-  currentImage: null | ImageItem;
+  currentImage: null | { name: string; url: string };
   images: ImageItem[];
   imageSetting: ImageSetting;
 };
@@ -37,8 +37,10 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       ipcInvoke('controller.setting.setWorkspaceSetting', { workspace: path });
     },
 
-    changeCurrentImage(image: ImageItem) {
-      this.currentImage = image;
+    async changeCurrentImage(image: ImageItem) {
+      this.currentImage = await ipcInvoke('controller.image.ipcGetImageBase64', {
+        name: image.name,
+      });
     },
 
     async syncImages() {

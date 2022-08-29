@@ -32,6 +32,15 @@ class ImageService extends Service {
       console.error(err);
     }
   }
+
+  async getImageBuffer(filename) {
+
+    try {
+      return await sharp(filename).jpeg().toBuffer();
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }
 
 

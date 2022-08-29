@@ -84,6 +84,22 @@ class ImageController extends Controller {
   
     exec('mv '+imageDir+'/cropped_'+params.name+' '+ imageDir+'/'+params.name);
   }
+
+  async ipcGetImageBase64(args, event) {
+
+    console.log('ipcGetImageBase64: ' + JSON.stringify(args));
+    const params = args;
+    const imageDir = this.service.storage.getWorkspaceSettingData();
+    const imageBuffer = await this.service.image.getImageBuffer(imageDir+'/'+params.name);
+    let url = ''
+    if (imageBuffer) {
+      url ='data:image/png;base64, '+imageBuffer.toString('base64');
+    }
+    return {
+      name: params.name,
+      url: url,
+    }
+  }
 }
 
 

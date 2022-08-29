@@ -45,6 +45,8 @@
       doAction(action) {
         const { cropper } = this;
         console.log(action);
+        console.log(this.data);
+
         switch (action) {
           case 'move':
           case 'crop':

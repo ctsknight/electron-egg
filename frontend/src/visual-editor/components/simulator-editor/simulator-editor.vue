@@ -5,9 +5,9 @@
       <editor
         v-if="imageData.loaded"
         :data="imageData"
-        ref="editorRef"
         @save-event="saveimage"
         @preview-event="preview"
+        :key="updateKey"
       />
       <div class="center-screen" v-else>
         <el-icon :size="700" color="#FFFFFF"><PictureFilled /></el-icon>
@@ -60,18 +60,18 @@
         });
       };
 
-      return { currentImage, imageData, editorRef, saveimage, preview };
+      const updateKey = ref(0);
+      return { currentImage, imageData, editorRef, saveimage, preview, updateKey };
     },
     watch: {
       currentImage(newValue, oldValue) {
         console.log('reset  ' + newValue.name);
         if (newValue) {
-          this.$refs.editorRef?.reset();
           this.imageData.name = newValue.name;
-          this.imageData.url = newValue.path;
+          this.imageData.url = newValue.url;
           this.imageData.loaded = true;
           console.log(this.imageData);
-          this.$refs.editorRef?.start();
+          this.updateKey++;
         }
       },
     },
