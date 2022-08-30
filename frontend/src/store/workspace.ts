@@ -33,8 +33,10 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
   actions: {
     async changeWorkspace() {
       const path: string = await ipcInvoke('controller.disk.selectFolder', '');
-      this.workspace = path;
-      ipcInvoke('controller.setting.setWorkspaceSetting', { workspace: path });
+      if (path) {
+        this.workspace = path;
+        ipcInvoke('controller.setting.setWorkspaceSetting', { workspace: path });
+      }
     },
 
     async changeCurrentImage(image: ImageItem) {

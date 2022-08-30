@@ -39,6 +39,8 @@
 </script>
 
 <script lang="tsx" setup>
+  import ipcInvoke from '@/api/ipcRenderer';
+
   import { Tickets } from '@element-plus/icons-vue';
   import { useWorkSpaceStore } from '@/store/workspace';
   import { storeToRefs } from 'pinia';
@@ -58,8 +60,13 @@
           console.log('Keep order order ');
           break;
         case 'export-pdf':
+          console.log('export-pdf ');
+
           if (multipleSelection.value.length > 0) {
             console.log('export-pdf ');
+            ipcInvoke('controller.image.ipcConvertImagesToPDF', {
+              imageitems: JSON.stringify(multipleSelection.value),
+            });
           } else {
             ElMessage.error('请先选择要输出到图片');
           }
@@ -87,8 +94,7 @@
         // sortablejs's option
         animation: 150,
         onEnd: (evt) => {
-          ElMessage.success(`Drag the ${evt.oldIndex}th row to ${evt.newIndex}`);
-          console.log(evt.oldIndex, evt.newIndex);
+          ElMessage.success(`成功移动第 ${evt.oldIndex} 行到第 ${evt.newIndex} 行`);
         },
       },
     },

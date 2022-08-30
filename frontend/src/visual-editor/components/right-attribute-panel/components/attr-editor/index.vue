@@ -4,7 +4,7 @@
       <template #value>
         <van-icon name="replay" class="search-icon" size="28" style="margin-right: 10px" />
 
-        <van-icon name="search" class="search-icon" size="30" @click="changeWorkspacePath" />
+        <van-icon name="desktop-o" class="search-icon" size="30" @click="changeWorkspacePath" />
       </template>
       <template #label>
         <span class="custom-title">{{ currentWorkspace }}</span>

@@ -6,15 +6,7 @@ const fs = require("fs");
 const is = require("electron-is");
 const { exec } = require("child_process");
 const Controller = require("ee-core").Controller;
-const Utils = require("ee-core").Utils;
-const electronApp = require("electron").app;
-const autoLaunchManager = require("../library/autoLaunch");
-const dayjs = require("dayjs");
-const { times } = require("lodash");
-
-let myTimer = null;
-let browserViewObj = null;
-let notificationObj = null;
+const imgToPDF = require('image-to-pdf')
 
 /**
  * 示例控制器
@@ -101,6 +93,31 @@ class ImageController extends Controller {
       cropped: false,
       cropping: false,
     }
+  }
+
+  async ipcConvertImagesToPDF(args, event) {
+
+    console.log('ipcConvertImagesToPDF');
+    const imageitems = JSON.parse(args.imageitems);
+    const exportMode = this.service.storage.getPDFExportTypeSettingData();
+    const imagesettingData = this.service.storage.getImageSettingData();
+    let exportImages = [];
+    for (let i = 0; i < imageitems.length; i++) {
+      const imageItem = await this.ipcGetCurrentImage(imageitems[i]);
+      exportImages.push(imageItem);
+    }
+    const imageDir = this.service.storage.getWorkspaceSettingData();
+
+    if (exportMode === 'single') { 
+      exportImages.forEach(element => {
+        console.log(element.name);
+        imgToPDF([element.url], imgToPDF.sizes.A4).pipe(fs.createWriteStream(imageDir+'/'+element.name.split('.')[0]+'.pdf'));
+      });
+    } else {
+      const pages = exportImages.map(image => image.url);
+      imgToPDF(pages, imgToPDF.sizes.A4).pipe(fs.createWriteStream(imageDir+'/'+imagesettingData.prefix+'.pdf'));
+    }
+
   }
 }
 
