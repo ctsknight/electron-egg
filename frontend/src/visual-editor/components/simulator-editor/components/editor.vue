@@ -182,6 +182,7 @@
         }
       },
       start() {
+        this.stop();
         const { data } = this;
         if (data.cropped || this.cropper) {
           return;

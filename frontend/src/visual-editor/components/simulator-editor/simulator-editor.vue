@@ -3,8 +3,8 @@
     <!--vue-pdf-embed :source="currentImage?.path" v-if="currentImage?.format == '.pdf'" /-->
     <main class="main">
       <editor
-        v-if="imageData.loaded"
-        :data="imageData"
+        v-if="currentImage"
+        :data="currentImage"
         @save-event="saveimage"
         @preview-event="preview"
         :key="updateKey"
@@ -35,16 +35,6 @@
       const store = useWorkSpaceStore();
       const { currentImage } = storeToRefs(store);
 
-      const imageData = ref({
-        cropped: false,
-        cropping: false,
-        loaded: false,
-        name: '',
-        previousUrl: '',
-        type: '',
-        url: '',
-      });
-
       const editorRef = ref(null);
 
       const saveimage = async (area) => {
@@ -56,21 +46,17 @@
 
       const preview = () => {
         ipcInvoke('controller.disk.openFile', {
-          fullpath: currentImage.value?.location,
+          fullpath: currentImage.value?.path,
         });
       };
 
       const updateKey = ref(0);
-      return { currentImage, imageData, editorRef, saveimage, preview, updateKey };
+      return { currentImage, editorRef, saveimage, preview, updateKey };
     },
     watch: {
       currentImage(newValue, oldValue) {
         console.log('reset  ' + newValue.name);
         if (newValue) {
-          this.imageData.name = newValue.name;
-          this.imageData.url = newValue.url;
-          this.imageData.loaded = true;
-          console.log(this.imageData);
           this.updateKey++;
         }
       },

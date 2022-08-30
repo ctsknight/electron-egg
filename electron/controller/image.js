@@ -38,8 +38,7 @@ class ImageController extends Controller {
       .map((item) =>  {
         return {
           name: item.name,
-          path: 'scanner-file-protocol://' + args.workspace + '/' + item.name,
-          location: args.workspace + '/' + item.name,
+          path: args.workspace + '/' + item.name,
           size: fs.statSync(path.join(args.workspace, item.name)).size,
           format: path.extname(item.name).substring(1),
           thumbnailpath: 'scanner-file-protocol://' + args.workspace + '/' + item.name
@@ -85,19 +84,22 @@ class ImageController extends Controller {
     exec('mv '+imageDir+'/cropped_'+params.name+' '+ imageDir+'/'+params.name);
   }
 
-  async ipcGetImageBase64(args, event) {
+  async ipcGetCurrentImage(args, event) {
 
-    console.log('ipcGetImageBase64: ' + JSON.stringify(args));
+    console.log('ipcGetCurrentImage: ' + JSON.stringify(args));
     const params = args;
-    const imageDir = this.service.storage.getWorkspaceSettingData();
-    const imageBuffer = await this.service.image.getImageBuffer(imageDir+'/'+params.name);
+    const imageBuffer = await this.service.image.getImageBuffer(params.path);
     let url = ''
     if (imageBuffer) {
-      url ='data:image/png;base64, '+imageBuffer.toString('base64');
+      url ='data:image/jpeg;base64, '+imageBuffer.toString('base64');
     }
     return {
       name: params.name,
       url: url,
+      previousUrl: '',
+      path: params.path,
+      cropped: false,
+      cropping: false,
     }
   }
 }

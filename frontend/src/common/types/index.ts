@@ -7,10 +7,18 @@ export interface NavItem {
 export interface ImageItem {
   name: string;
   path: string;
-  location: string;
   size: number;
-  format?: string;
-  thumbnailpath?: string;
+  format: string;
+  thumbnailpath: string;
+}
+
+export interface CurrentImageItem {
+  name: string;
+  url: string;
+  previousUrl: string;
+  path: string;
+  cropped: boolean;
+  cropping: boolean;
 }
 
 export interface CroppedArea {

@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
 import ipcInvoke from '@/api/ipcRenderer';
-import { ImageItem, ImageSetting } from '@/common/types';
+import { ImageItem, ImageSetting, CurrentImageItem } from '@/common/types';
 
 type WorkspaceState = {
   workspace: string;
-  currentImage: null | { name: string; url: string };
+  currentImage: null | CurrentImageItem;
   images: ImageItem[];
   imageSetting: ImageSetting;
 };
@@ -38,8 +38,9 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
     },
 
     async changeCurrentImage(image: ImageItem) {
-      this.currentImage = await ipcInvoke('controller.image.ipcGetImageBase64', {
+      this.currentImage = await ipcInvoke('controller.image.ipcGetCurrentImage', {
         name: image.name,
+        path: image.path,
       });
     },
 
@@ -50,8 +51,9 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
           workspace: this.workspace,
         });
 
-        if (this.images.length > 0) {
-          this.currentImage = this.images[0];
+        if (this.images && this.images.length > 0) {
+          const useWorkspace = useWorkSpaceStore();
+          useWorkspace.changeCurrentImage(this.images[0]);
         }
       }
     },

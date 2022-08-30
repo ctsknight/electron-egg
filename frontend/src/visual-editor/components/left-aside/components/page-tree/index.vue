@@ -12,7 +12,7 @@
     <el-table-column label="扫描图片列表">
       <template #default="scope">
         <div class="block">
-          <el-image :src="scope.row.path" fit="fill">
+          <el-image :src="scope.row.thumbnailpath" fit="fill">
             <template #placeholder>
               <div class="image-slot">Loading<span class="dot">...</span></div>
             </template>
