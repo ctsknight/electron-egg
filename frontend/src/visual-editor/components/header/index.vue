@@ -26,7 +26,20 @@
     </el-col>
     <!--    中间操作页面部分 end-->
     <!--    右侧工具栏 start-->
-    <el-col :span="6" class="right-tools flex flex-row-reverse items-center">
+
+    <el-col :span="4" class="right-tools flex flex-row-reverse items-center">
+      <el-tooltip class="item" effect="dark" content="扫描模式" placement="bottom">
+        <el-switch
+          v-model="scanMode"
+          size="large"
+          inline-prompt
+          style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+          active-text="新扫"
+          inactive-text="重扫"
+        />
+      </el-tooltip>
+    </el-col>
+    <el-col :span="2" class="right-tools flex flex-row-reverse items-center">
       <el-tooltip class="item" effect="dark" content="扫描" placement="bottom">
         <el-button
           type="primary"
@@ -34,36 +47,44 @@
           size="large"
           circle
           class="flex-shrink-0 !p-6px"
-          @click="runPreview"
+          @click="scan"
         />
       </el-tooltip>
-      <!--      <el-tooltip class="item" effect="dark" content="github" placement="bottom">-->
-      <!--        <a href="https://github.com/buqiyuan/vite-vue3-lowcode" target="_blank">-->
-      <!--          <img :src="`${BASE_URL}github.svg`" width="40" height="40" alt="" />-->
-      <!--        </a>-->
-      <!--      </el-tooltip>-->
     </el-col>
     <!--    右侧工具栏 end-->
   </el-row>
-  <preview v-model:visible="isShowH5Preview" />
 </template>
 
 <script lang="ts" setup>
-  import Preview from './preview.vue';
-  import { useVisualData, localKey } from '@/visual-editor/hooks/useVisualData';
+  import { ref } from 'vue';
+  import ipcInvoke from '@/api/ipcRenderer';
+  import { useWorkSpaceStore } from '@/store/workspace';
+  import { storeToRefs } from 'pinia';
   import { useTools } from './useTools';
-  import { CameraFilled } from '@element-plus/icons-vue';
-
-  const isShowH5Preview = ref(false);
-
   const tools = useTools();
 
-  const { jsonData } = useVisualData();
+  import { CameraFilled } from '@element-plus/icons-vue';
+  import { ScanParams, ImageItem } from '@/common/types';
+  const workspaceStore = useWorkSpaceStore();
+  const { workspace, imageSetting, currentImage, images } = storeToRefs(workspaceStore);
 
-  const runPreview = () => {
-    sessionStorage.setItem(localKey, JSON.stringify(jsonData));
-    localStorage.setItem(localKey, JSON.stringify(jsonData));
-    isShowH5Preview.value = true;
+  const scanMode = ref(true);
+  const scan = async () => {
+    const scanparams: ScanParams = {
+      type: imageSetting.value.type,
+      resolution: imageSetting.value.resolution,
+    };
+
+    const imageItem: ImageItem = await ipcInvoke('controller.image.ipcScanImage', {
+      mode: scanMode.value ? 'new_scan' : 'repeat_scan',
+      scanparams: JSON.stringify(scanparams),
+      prefix: imageSetting.value.prefix,
+      isCrpped: imageSetting.value.isCrpped,
+      croppedArea: JSON.stringify(imageSetting.value.croppedArea),
+      workspace: workspace.value,
+      currentImageName: currentImage.value?.name,
+    });
+    console.log(imageItem);
   };
 </script>
 

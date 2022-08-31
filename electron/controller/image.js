@@ -31,9 +31,8 @@ class ImageController extends Controller {
         return {
           name: item.name,
           path: args.workspace + '/' + item.name,
-          size: fs.statSync(path.join(args.workspace, item.name)).size,
           format: path.extname(item.name).substring(1),
-          thumbnailpath: 'scanner-file-protocol://' + args.workspace + '/' + item.name
+          thumbnailpath: 'scanner-file-protocol://' + args.workspace + '/thumbnail/' + item.name
         };
       });
   }
@@ -45,15 +44,28 @@ class ImageController extends Controller {
    */
   async ipcScanImage(args, event) {
 
-    const params = args;
-    const result = await this.service.image.scanImage(
-      args,
-      this.imageDir,
-      timeNow
-    );
+    console.log("ipcScanImage : " + JSON.stringify(args));
+    const basePath = args.workspace;
+    const scanparams = JSON.parse(args.scanparams);
+    let filename = '';
+    if (args.mode === 'new_scan') {
 
-    console.log("ipcScanImage : " + result.msg);
-    return result.msg;
+      filename += args.prefix+'_'+new Date().getTime()+'.'+scanparams.type;
+    } else {
+      filename += args.currentImageName;
+    }
+    console.log(filename)
+
+    const result = await this.service.image.scanImage(
+      scanparams,
+      filename
+    );
+    return {
+      name: filename,
+      path: basePath+'/' + filename,
+      format: path.extname(filename).substring(1),
+      thumbnailpath: 'scanner-file-protocol://' + basePath+'/thumbnail/' + filename
+    };
   }
 
   /**

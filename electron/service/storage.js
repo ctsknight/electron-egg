@@ -33,7 +33,6 @@ class StorageService extends Service {
       },
       pdfExportTypep: 'single',
       ip: '127.0.0.1',
-      port: '8888',
       workspace: '',
     };
 
@@ -63,6 +62,17 @@ class StorageService extends Service {
     return data;
   }
 
+  getBaseUrl() {
+    let ipData = this.scannerDB.db
+    .get('ip')
+    .value();
+
+    if (_.isEmpty(ipData)) {
+      ipData = ''
+    }
+
+    return 'http://' + ipData+':8888';
+  }
   getIPSettingData() {
     let data = this.scannerDB.db
     .get('ip')

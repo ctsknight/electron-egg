@@ -2,7 +2,7 @@
 
 const Service = require("ee-core").Service;
 const sharp = require('sharp');
-
+const axios = require('axios');
 /**
  * image服务
  * @class
@@ -12,15 +12,19 @@ class ImageService extends Service {
     super(ctx);
   }
 
-  async scanImage(args, imageDir, timeNow) {
-    let input = imageDir + "original/output.tif";
-    // const image = await sharp(input).resize(1920).toFile(output);
-    let obj = {
-      status: "ok",
-      params: args,
-      msg: input,
-    };
-    return obj;
+  async scanImage(params, filename) {
+    const baseUrl = this.service.storage.getBaseUrl();
+
+    axios({
+      method: 'get',
+      url: baseUrl+'/capture',
+      params: params,
+      responseType: 'stream'
+    })
+      .then(function (response) {
+        response.data.pipe(fs.createWriteStream(filename))
+      });
+  
   }
 
   

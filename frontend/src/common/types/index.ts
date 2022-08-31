@@ -7,7 +7,6 @@ export interface NavItem {
 export interface ImageItem {
   name: string;
   path: string;
-  size: number;
   format: string;
   thumbnailpath: string;
 }
@@ -34,4 +33,9 @@ export interface ImageSetting {
   resolution: number;
   isCrpped: boolean;
   croppedArea: CroppedArea;
+}
+
+export interface ScanParams {
+  type: string;
+  resolution: number;
 }
