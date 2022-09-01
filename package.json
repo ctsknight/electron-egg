@@ -1,7 +1,7 @@
 {
-  "name": "ee",
-  "version": "2.1.6",
-  "description": "A fast, desktop software development framework",
+  "name": "microbox-scanner",
+  "version": "1.2.3",
+  "description": "MicroBox Scanner for Linux",
   "main": "main.js",
   "scripts": {
     "start": "electron . ",
@@ -33,9 +33,9 @@
     "events": {}
   },
   "build": {
-    "productName": "ee",
-    "appId": "com.electron.ee",
-    "copyright": "wallace5303",
+    "productName": "MicroboxScanner",
+    "appId": "com.deepin.microbox-scanner",
+    "copyright": "zhenyugeng",
     "directories": {
       "output": "out"
     },
@@ -63,14 +63,9 @@
       "installerHeaderIcon": "./build/icons/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "EE框架"
+      "shortcutName": "MicroBox"
     },
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "https://github.com/wallace5303/electron-egg"
-      }
-    ],
+    
     "mac": {
       "icon": "./build/icons/icon.icns",
       "artifactName": "${productName}-macos-${version}.${ext}",
@@ -89,20 +84,14 @@
       ]
     },
     "linux": {
-      "icon": "./build/icons/icon.icns",
+      "icon": "./build/icons/256x256.png",
       "artifactName": "${productName}-linux-${version}.${ext}",
       "target": [
         "deb"
-      ],
-      "category": "Utility"
+      ]
     }
   },
-  "repository": "https://github.com/wallace5303/ee.git",
-  "keywords": [
-    "Electron"
-  ],
-  "author": "wallace5303, Inc <530353222@qq.com>",
-  "license": "Apache",
+  "author": "Zhenyu Geng <zge821@outlook.com>",
   "devDependencies": {
     "debug": "^4.3.3",
     "electron": "^13.6.9",
