@@ -71,7 +71,7 @@ class StorageService extends Service {
       ipData = ''
     }
 
-    return 'http://' + ipData+':8888';
+    return 'http://' + ipData+':5555';
   }
   getIPSettingData() {
     let data = this.scannerDB.db

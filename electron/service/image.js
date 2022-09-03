@@ -3,6 +3,8 @@
 const Service = require("ee-core").Service;
 const sharp = require('sharp');
 const axios = require('axios');
+const fs = require("fs");
+
 /**
  * image服务
  * @class
@@ -10,21 +12,43 @@ const axios = require('axios');
 class ImageService extends Service {
   constructor(ctx) {
     super(ctx);
+    this.download_image = (filename, url) =>
+    axios({
+      url,
+      responseType: 'stream',
+    }).then(
+      response =>
+        new Promise((resolve, reject) => {
+          response.data
+            .pipe(fs.createWriteStream(filename))
+            .on('finish', () => {console.log("download finished : " + filename); resolve();})
+            .on('error', e => reject( 'Error by downloading '+filename + ': ' + e));
+        }),
+    );
+    
   }
 
-  async scanImage(params, filename) {
+  async scanImage(params) {
     const baseUrl = this.service.storage.getBaseUrl();
 
-    axios({
+    const response = await axios({
       method: 'get',
       url: baseUrl+'/capture',
-      params: params,
-      responseType: 'stream'
+      params: params
     })
-      .then(function (response) {
-        response.data.pipe(fs.createWriteStream(filename))
-      });
-  
+
+    return response.data
+  }
+
+  async downloadScannedImage(workspace, filename, imageUrl, thumbnailUrl) {
+    const thumbnailDir = workspace + '/thumbnail/';
+    if (!fs.existsSync(thumbnailDir)){
+      fs.mkdirSync(thumbnailDir);
+    }
+
+    this.download_image(thumbnailDir+filename, thumbnailUrl);
+    this.download_image(workspace+'/'+filename, imageUrl);
+
   }
 
   

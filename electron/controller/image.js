@@ -1,9 +1,7 @@
 "use strict";
 
-const _ = require("lodash");
 const path = require("path");
 const fs = require("fs");
-const is = require("electron-is");
 const { exec } = require("child_process");
 const Controller = require("ee-core").Controller;
 const imgToPDF = require('image-to-pdf')
@@ -56,16 +54,30 @@ class ImageController extends Controller {
     }
     console.log(filename)
 
-    const result = await this.service.image.scanImage(
-      scanparams,
-      filename
-    );
-    return {
-      name: filename,
-      path: basePath+'/' + filename,
-      format: path.extname(filename).substring(1),
-      thumbnailpath: 'scanner-file-protocol://' + basePath+'/thumbnail/' + filename
-    };
+    try {
+      const {status, message, data} = await this.service.image.scanImage(
+        scanparams
+      );
+
+      if (status===200) {
+
+        this.service.image.downloadScannedImage(basePath, filename, data.imageUrl, data.thumbnailUrl)
+        return {
+          name: data.name,
+          path: data.currentImageUrl,
+          format: data.format,
+          thumbnailpath: data.thumbnailUrl
+        };
+  
+      } else {
+        throw message
+      }
+  
+    } catch (err) {
+      console.log(err)
+    }
+
+
   }
 
   /**
