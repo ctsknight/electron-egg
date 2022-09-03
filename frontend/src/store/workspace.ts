@@ -35,7 +35,9 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       const path: string = await ipcInvoke('controller.disk.selectFolder', '');
       if (path) {
         this.workspace = path;
-        ipcInvoke('controller.setting.setWorkspaceSetting', { workspace: path });
+        ipcInvoke('controller.setting.setWorkspaceSetting', {
+          workspace: path,
+        });
       }
     },
 
@@ -51,6 +53,7 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       if (this.workspace) {
         this.images = await ipcInvoke('controller.image.getImagesFromWorkspace', {
           workspace: this.workspace,
+          prefix: this.imageSetting.prefix,
         });
 
         if (this.images && this.images.length > 0) {

@@ -47,38 +47,6 @@ class  DiskController extends Controller {
     return result;
   }
 
-  /**
-   * json数据库操作
-   */   
-  async dbOperation(args) {
-    const { service } = this;
-    const paramsObj = args;
-    //console.log('eeeee paramsObj:', paramsObj);
-    const data = {
-      action: paramsObj.action,
-      result: null,
-      all_list: []
-    };
-    
-    switch (paramsObj.action) {
-      case 'add' :
-        data.result = await service.storage.addTestData(paramsObj.info);;
-        break;
-      case 'del' :
-        data.result = await service.storage.delTestData(paramsObj.delete_name);;
-        break;
-      case 'update' :
-        data.result = await service.storage.updateTestData(paramsObj.update_name, paramsObj.update_age);
-        break;
-      case 'get' :
-        data.result = await service.storage.getTestData(paramsObj.search_age);
-        break;
-    }
-
-    data.all_list = await service.storage.getAllTestData();
-
-    return data;
-  }
 
   /**
    * 消息提示对话框

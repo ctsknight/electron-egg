@@ -45,8 +45,7 @@ class ImageService extends Service {
     if (!fs.existsSync(thumbnailDir)){
       fs.mkdirSync(thumbnailDir);
     }
-
-    this.download_image(thumbnailDir+filename, thumbnailUrl);
+    this.download_image(thumbnailDir+filename.split('.')[0]+'.jpg', thumbnailUrl);
     this.download_image(workspace+'/'+filename, imageUrl);
 
   }
@@ -57,7 +56,7 @@ class ImageService extends Service {
     try {
       const info = await sharp(filename).extract(area).toFile(outputfile);
     } catch (err) {
-      console.error(err);
+      this.app.logger.error('cropImage error: '+  err.message);
     }
   }
 
@@ -66,7 +65,7 @@ class ImageService extends Service {
     try {
       return await sharp(filename).jpeg().toBuffer();
     } catch (err) {
-      console.error(err);
+      this.app.logger.error('getImageBuffer error: '+  err.message);
     }
   }
 }

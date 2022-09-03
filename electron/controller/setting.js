@@ -61,7 +61,6 @@ class SettingController extends Controller {
   }
 
   setPdfExportType(args, event) {
-    console.log("setPdfExportType", args);
     this.service.storage.updatePDFExportTypeSettingData(args.pdfExportTypep);
   }
 }

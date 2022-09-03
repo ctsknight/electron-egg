@@ -2,7 +2,13 @@
   <van-cell-group style="margin-top: 20px; margin-bottom: 20px">
     <van-cell center title="工作目录">
       <template #value>
-        <van-icon name="replay" class="search-icon" size="28" style="margin-right: 10px" />
+        <van-icon
+          name="replay"
+          class="search-icon"
+          size="28"
+          style="margin-right: 10px"
+          @click="reload"
+        />
 
         <van-icon name="desktop-o" class="search-icon" size="30" @click="changeWorkspacePath" />
       </template>
@@ -11,40 +17,43 @@
       </template>
     </van-cell>
   </van-cell-group>
-  <van-cell-group>
-    <van-cell title="图片规格" style="margin-top: 30px">
-      <template #right-icon>
-        <el-switch v-model="isChangeImageSetting" active-text="修改" inactive-text="保存" />
-      </template>
-    </van-cell>
-    <van-field
-      v-model="imageSetting.prefix"
-      center
-      clearable
-      label="图片名称前缀"
-      placeholder="请输入图片名称前缀"
-      :disabled="!isChangeImageSetting"
-    />
-    <van-cell center title="图片类型">
-      <template #value>
-        <van-radio-group :disabled="!isChangeImageSetting" v-model="imageSetting.type">
-          <van-radio name="tiff">TIFF</van-radio>
-          <van-radio name="png">PNG</van-radio>
-          <van-radio name="jpeg">JPEG</van-radio>
-        </van-radio-group>
-      </template>
-    </van-cell>
-    <van-cell center title="分辨率">
-      <template #value>
-        <van-radio-group :disabled="!isChangeImageSetting" v-model="imageResolution">
-          <van-radio name="200">200</van-radio>
-          <van-radio name="300">300</van-radio>
-          <van-radio name="400">400</van-radio>
-          <van-radio name="600">600</van-radio>
-        </van-radio-group>
-      </template>
-    </van-cell>
-  </van-cell-group>
+  <van-form>
+    <van-cell-group>
+      <van-cell title="图片规格" style="margin-top: 30px">
+        <template #right-icon>
+          <el-switch v-model="isChangeImageSetting" active-text="修改" inactive-text="保存" />
+        </template>
+      </van-cell>
+      <van-field
+        v-model="imageSetting.prefix"
+        center
+        clearable
+        label="图片名称前缀"
+        placeholder="图片名称前缀"
+        :disabled="!isChangeImageSetting"
+        :rules="[{ required: true, message: '请填写扫描图片名称前缀' }]"
+      />
+      <van-cell center title="图片类型">
+        <template #value>
+          <van-radio-group :disabled="!isChangeImageSetting" v-model="imageSetting.type">
+            <van-radio name="tiff">TIFF</van-radio>
+            <van-radio name="png">PNG</van-radio>
+            <van-radio name="jpeg">JPEG</van-radio>
+          </van-radio-group>
+        </template>
+      </van-cell>
+      <van-cell center title="分辨率">
+        <template #value>
+          <van-radio-group :disabled="!isChangeImageSetting" v-model="imageResolution">
+            <van-radio name="200">200</van-radio>
+            <van-radio name="300">300</van-radio>
+            <van-radio name="400">400</van-radio>
+            <van-radio name="600">600</van-radio>
+          </van-radio-group>
+        </template>
+      </van-cell>
+    </van-cell-group>
+  </van-form>
 
   <van-cell-group style="margin-top: 20px">
     <van-cell title="保存当前图片顺序">
@@ -90,6 +99,10 @@
     await workspaceStore.changeWorkspace();
     workspaceStore.syncImages();
   };
+
+  const reload = async () => {
+    workspaceStore.syncImages();
+  };
   const pdfExportType = ref('single');
 
   onMounted(async () => {
@@ -109,7 +122,14 @@
 
   watch(isChangeImageSetting, (newValue) => {
     if (!newValue) {
-      workspaceStore.updateImageSetting();
+      if (imageSetting.value.prefix) {
+        workspaceStore.updateImageSetting();
+      } else {
+        ElMessage({
+          type: 'error',
+          message: '未填写图片名称前缀， 更新失败！',
+        });
+      }
     }
   });
 

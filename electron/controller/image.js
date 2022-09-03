@@ -5,7 +5,7 @@ const fs = require("fs");
 const { exec } = require("child_process");
 const Controller = require("ee-core").Controller;
 const imgToPDF = require('image-to-pdf')
-
+const {dialog} = require('electron');
 /**
  * 示例控制器
  * @class
@@ -24,13 +24,13 @@ class ImageController extends Controller {
 
     return fs
       .readdirSync(args.workspace, { withFileTypes: true })
-      .filter((item) => !item.isDirectory()&& path.extname(item.name).match(/\.(jpe?g|png|tiff|bmp)$/))
+      .filter((item) => !item.isDirectory()&& path.extname(item.name).match(/\.(jpe?g|png|tiff|bmp)$/) && item.name.startsWith(args.prefix))
       .map((item) =>  {
         return {
           name: item.name,
           path: args.workspace + '/' + item.name,
           format: path.extname(item.name).substring(1),
-          thumbnailpath: 'scanner-file-protocol://' + args.workspace + '/thumbnail/' + item.name
+          thumbnailpath: 'scanner-file-protocol://' + args.workspace + '/thumbnail/' + item.name.split('.')[0]+'.jpg'
         };
       });
   }
@@ -74,7 +74,13 @@ class ImageController extends Controller {
       }
   
     } catch (err) {
-      console.log(err)
+      this.app.logger.error('ipcScanImage: '+err.message)
+      dialog.showMessageBoxSync({
+        type: 'error', // "none", "info", "error", "question" 或者 "warning"
+        title: '扫描错误',
+        message: err.message,
+        detail: ''
+      })
     }
 
 
