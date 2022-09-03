@@ -40,12 +40,12 @@ class ImageService extends Service {
     return response.data
   }
 
-  async downloadScannedImage(workspace, filename, imageUrl, thumbnailUrl) {
+  async downloadScannedImage(workspace, filename, thumbnailname, imageUrl, thumbnailUrl) {
     const thumbnailDir = workspace + '/thumbnail/';
     if (!fs.existsSync(thumbnailDir)){
       fs.mkdirSync(thumbnailDir);
     }
-    this.download_image(thumbnailDir+filename.split('.')[0]+'.jpg', thumbnailUrl);
+    this.download_image(thumbnailDir+ thumbnailname, thumbnailUrl);
     this.download_image(workspace+'/'+filename, imageUrl);
 
   }

@@ -61,12 +61,22 @@ class ImageController extends Controller {
 
       if (status===200) {
 
-        this.service.image.downloadScannedImage(basePath, filename, data.imageUrl, data.thumbnailUrl)
-        return {
-          name: data.name,
-          path: data.currentImageUrl,
+        const thumbnailname = filename.split('.')[0]+'.jpg';
+        this.service.image.downloadScannedImage(basePath, filename, thumbnailname, data.imageUrl, data.thumbnailUrl)
+        return { 
+          imageItem:{
+          name: filename,
+          path: basePath + '/' + filename,
           format: data.format,
-          thumbnailpath: data.thumbnailUrl
+          thumbnailpath: 'scanner-file-protocol://' + basePath + '/thumbnail/' + thumbnailname
+        }, currentImageItem: {
+          name: filename,
+          url: data.currentImageUrl,
+          previousUrl: '',
+          path: basePath + '/' + filename,
+          cropped: false,
+          cropping: false,
+        }
         };
   
       } else {

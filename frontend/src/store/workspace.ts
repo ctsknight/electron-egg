@@ -48,6 +48,14 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       });
     },
 
+    setCurrentImage(currentImage: CurrentImageItem) {
+      this.currentImage = currentImage;
+    },
+
+    addImage(image: ImageItem) {
+      this.images.push(image);
+    },
+
     async syncImages() {
       console.log(this.workspace);
       if (this.workspace) {

@@ -69,13 +69,13 @@
   const { workspace, imageSetting, currentImage, images } = storeToRefs(workspaceStore);
 
   const scanMode = ref(true);
-  const scan = async () => {
+  const scan = () => {
     const scanparams: ScanParams = {
       type: imageSetting.value.type,
       resolution: imageSetting.value.resolution,
     };
 
-    const imageItem: ImageItem = await ipcInvoke('controller.image.ipcScanImage', {
+    ipcInvoke('controller.image.ipcScanImage', {
       mode: scanMode.value ? 'new_scan' : 'repeat_scan',
       scanparams: JSON.stringify(scanparams),
       prefix: imageSetting.value.prefix,
@@ -83,8 +83,13 @@
       croppedArea: JSON.stringify(imageSetting.value.croppedArea),
       workspace: workspace.value,
       currentImageName: currentImage.value?.name,
-    });
-    console.log(imageItem);
+    })
+      .then((response) => {
+        console.log(response);
+        workspaceStore.setCurrentImage(response.currentImageItem);
+        workspaceStore.addImage(response.imageItem);
+      })
+      .catch((error) => {});
   };
 </script>
 
