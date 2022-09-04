@@ -159,7 +159,7 @@ class ImageController extends Controller {
   async ipcGetThumbnaiImageBase64(args, event) {
 
     console.log('ipcGetThumbnaiImageBase64: ' + JSON.stringify(args));
-    const path = args.workspace + '/thumbnail/'+args.filename.split('.')[0]+'.jpg';
+    const path = args.workspace + '/thumbnail/'+args.filename.split('.')[0]+'.jpeg';
     const imageBuffer = await this.service.image.getImageBuffer(path);
     let url = ''
     if (imageBuffer) {

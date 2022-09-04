@@ -60,8 +60,8 @@ class ImageService extends Service {
       } else {
         await sharp(filePath).rotate(rotate).extract(area).withMetadata().toFile(outputPath);
       }
-      const thumbnailPath= workspace + '/thumbnail/'+filename.split('.')[0]+'.jpg';
-      sharp(outputPath).resize(250,null).withMetadata().toFile(thumbnailPath)
+      const thumbnailPath= workspace + '/thumbnail/'+filename.split('.')[0]+'.jpeg';
+      sharp(outputPath).resize(250,null).toFile(thumbnailPath)
     } catch (err) {
       console.error(err);
       throw (err.message);
@@ -72,6 +72,7 @@ class ImageService extends Service {
   async getImageBuffer(filename) {
 
     try {
+      console.log('Loading image buffer from ' + filename);
       return await sharp(filename).jpeg().toBuffer();
     } catch (err) {
       this.app.logger.error('getImageBuffer error: '+  err.message);

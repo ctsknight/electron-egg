@@ -110,11 +110,14 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
     updateThumbnaiImage(name: string, externalUrl: string) {
       console.log('updateThumbnaiImage', name);
       const foundImage = this.images.find((i) => i.name === name);
-      console.log(foundImage);
+      console.log('updateThumbnaiImage', foundImage);
       if (foundImage) {
         if (externalUrl) {
+          console.log('updateThumbnaiImage :', externalUrl);
           foundImage.thumbnailpath = externalUrl;
         } else {
+          console.log('updateThumbnaiImage - ipcGetThumbnaiImageBase64');
+
           ipcInvoke('controller.image.ipcGetThumbnaiImageBase64', {
             workspace: this.workspace,
             filename: foundImage.name,
