@@ -61,7 +61,7 @@ class ImageService extends Service {
         await sharp(filePath).rotate(rotate).extract(area).withMetadata().toFile(outputPath);
       }
       const thumbnailPath= workspace + '/thumbnail/'+filename.split('.')[0]+'.jpeg';
-      sharp(outputPath).resize(250,null).toFile(thumbnailPath)
+      await sharp(outputPath).resize(250,null).withMetadata().toFile(thumbnailPath)
     } catch (err) {
       console.error(err);
       throw (err.message);
