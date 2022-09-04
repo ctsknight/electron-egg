@@ -105,15 +105,31 @@ class ImageController extends Controller {
 
     console.log('ipcCropImage: ' + JSON.stringify(args));
     const params = args;
+    console.log('ipcCropImage: ' + args.name);
+
     const area = JSON.parse(params.area);
     const imageDir = this.service.storage.getWorkspaceSettingData();
-    await this.service.image.cropImage(
-      {left: Math.round(area.x), top: Math.round(area.y), width: Math.round(area.width), height: Math.round(area.height)},
-      imageDir+'/'+params.name,
-      imageDir+'/cropped_'+params.name
-    );
+    try {
+      await this.service.image.cropImage(
+        area.rotate,
+        {left: Math.round(area.x), top: Math.round(area.y), width: Math.round(area.width), height: Math.round(area.height)},
+        params.format,
+        imageDir,
+        params.name,
+        '/cropped_'+params.name
+      );
+      exec('mv '+imageDir+'/cropped_'+params.name+' '+ imageDir+'/'+params.name);
+    } catch (err) {
+      this.app.logger.error('ipcCropImage: '+err.message)
+      dialog.showMessageBoxSync({
+        type: 'error', // "none", "info", "error", "question" 或者 "warning"
+        title: '剪切保存错误',
+        message: err.message,
+        detail: ''
+      })
+
+    }
   
-    exec('mv '+imageDir+'/cropped_'+params.name+' '+ imageDir+'/'+params.name);
   }
 
   async ipcGetCurrentImage(args, event) {
@@ -129,6 +145,7 @@ class ImageController extends Controller {
       name: params.name,
       url: url,
       previousUrl: '',
+      format: args.format,
       path: params.path,
       cropped: false,
       cropping: false,

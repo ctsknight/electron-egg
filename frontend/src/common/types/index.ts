@@ -16,6 +16,7 @@ export interface CurrentImageItem {
   url: string;
   previousUrl: string;
   path: string;
+  format: string;
   cropped: boolean;
   cropping: boolean;
 }

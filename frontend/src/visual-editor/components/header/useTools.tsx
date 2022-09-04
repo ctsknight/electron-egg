@@ -13,6 +13,7 @@ import {
   Download,
   RemoveFilled,
   VideoPlay,
+  Pointer,
 } from '@element-plus/icons-vue';
 import 'element-plus/es/components/message/style/css';
 
@@ -30,6 +31,23 @@ export const useTools = () => {
     state.cropping = data.cropping;
   });
   return [
+    {
+      title: '移动',
+      icon: Pointer,
+      onClick: () => {
+        if (!state.loaded) {
+          ElMessage({
+            type: 'warning',
+            message: '无效操作',
+          });
+          return;
+        }
+        emitter.emit('editor-action', 'move');
+      },
+      isShow: () => {
+        return state.loaded;
+      },
+    },
     {
       title: '剪切',
       icon: Crop,
@@ -61,7 +79,7 @@ export const useTools = () => {
         emitter.emit('editor-action', 'zoom-in');
       },
       isShow: () => {
-        return state.loaded;
+        return state.loaded && !state.cropping && !state.cropped;
       },
     },
     {
@@ -78,7 +96,7 @@ export const useTools = () => {
         emitter.emit('editor-action', 'zoom-out');
       },
       isShow: () => {
-        return state.loaded;
+        return state.loaded && !state.cropping && !state.cropped;
       },
     },
     {
@@ -95,7 +113,7 @@ export const useTools = () => {
         emitter.emit('editor-action', 'rotate-left');
       },
       isShow: () => {
-        return state.loaded;
+        return state.loaded && !state.cropping && !state.cropped;
       },
     },
     {
@@ -112,7 +130,7 @@ export const useTools = () => {
         emitter.emit('editor-action', 'rotate-right');
       },
       isShow: () => {
-        return state.loaded;
+        return state.loaded && !state.cropping && !state.cropped;
       },
     },
     {
@@ -129,7 +147,7 @@ export const useTools = () => {
         emitter.emit('editor-action', 'flip-horizontal');
       },
       isShow: () => {
-        return state.loaded;
+        return state.loaded && !state.cropping && !state.cropped;
       },
     },
     {
@@ -146,7 +164,7 @@ export const useTools = () => {
         emitter.emit('editor-action', 'flip-vertical');
       },
       isShow: () => {
-        return state.loaded;
+        return state.loaded && !state.cropping && !state.cropped;
       },
     },
     {

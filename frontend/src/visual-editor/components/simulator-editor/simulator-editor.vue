@@ -1,7 +1,7 @@
 <template>
   <div class="simulator-container">
     <!--vue-pdf-embed :source="currentImage?.path" v-if="currentImage?.format == '.pdf'" /-->
-    <main class="main">
+    <main class="main" v-loading="isImageChanging">
       <editor
         v-if="currentImage"
         :data="currentImage"
@@ -33,7 +33,7 @@
     },
     setup() {
       const store = useWorkSpaceStore();
-      const { currentImage } = storeToRefs(store);
+      const { currentImage, isImageChanging } = storeToRefs(store);
 
       const editorRef = ref(null);
 
@@ -41,6 +41,7 @@
         await ipcInvoke('controller.image.ipcCropImage', {
           area: JSON.stringify(area),
           name: currentImage.value.name,
+          format: currentImage.value.format,
         });
       };
 
@@ -51,7 +52,7 @@
       };
 
       const updateKey = ref(0);
-      return { currentImage, editorRef, saveimage, preview, updateKey };
+      return { currentImage, editorRef, saveimage, preview, updateKey, isImageChanging };
     },
     watch: {
       currentImage(newValue, oldValue) {

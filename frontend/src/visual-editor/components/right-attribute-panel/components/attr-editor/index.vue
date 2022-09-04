@@ -55,13 +55,14 @@
     </van-cell-group>
   </van-form>
 
-  <van-cell-group style="margin-top: 20px">
+  <!--   <van-cell-group style="margin-top: 20px">
     <van-cell title="保存当前图片顺序">
       <template #value>
         <van-icon name="passed" color="#1989fa" size="28" @click="exportType('keep-order')" />
       </template>
     </van-cell>
   </van-cell-group>
+ -->
   <van-cell-group style="margin-top: 30px">
     <van-cell title="导出PDF">
       <template #right-icon>

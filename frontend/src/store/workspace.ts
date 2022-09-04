@@ -1,9 +1,12 @@
 import { defineStore } from 'pinia';
 import ipcInvoke from '@/api/ipcRenderer';
 import { ImageItem, ImageSetting, CurrentImageItem } from '@/common/types';
+import { ElMessage, ElNotification } from 'element-plus';
 
 type WorkspaceState = {
   workspace: string;
+  isScanning: boolean;
+  isImageChanging: boolean;
   currentImage: null | CurrentImageItem;
   images: ImageItem[];
   imageSetting: ImageSetting;
@@ -14,6 +17,8 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
     return {
       workspace: '',
       currentImage: null,
+      isScanning: false,
+      isImageChanging: false,
       images: [],
       imageSetting: {
         prefix: 'microbox',
@@ -41,11 +46,38 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       }
     },
 
-    async changeCurrentImage(image: ImageItem) {
-      this.currentImage = await ipcInvoke('controller.image.ipcGetCurrentImage', {
+    changeCurrentImage(image: ImageItem) {
+      this.isImageChanging = true;
+      ipcInvoke('controller.image.ipcGetCurrentImage', {
         name: image.name,
+        format: image.format,
         path: image.path,
-      });
+      })
+        .then((currentImage) => {
+          this.currentImage = currentImage;
+          ElNotification({
+            title: '更换图片',
+            type: 'success',
+            message: '当前图片: ' + this.currentImage?.name,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          ElNotification({
+            type: 'error',
+            message: '载入图片出错: ' + error.message,
+          });
+        })
+        .finally(() => {
+          this.isImageChanging = false;
+        });
+    },
+    setIsScanning(isScanning: boolean) {
+      this.isScanning = isScanning;
+    },
+
+    setIsImageChanging(isImageChanging: boolean) {
+      this.isImageChanging = isImageChanging;
     },
 
     setCurrentImage(currentImage: CurrentImageItem) {
@@ -59,6 +91,7 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
     async syncImages() {
       console.log(this.workspace);
       if (this.workspace) {
+        this.images = [];
         this.images = await ipcInvoke('controller.image.getImagesFromWorkspace', {
           workspace: this.workspace,
           prefix: this.imageSetting.prefix,

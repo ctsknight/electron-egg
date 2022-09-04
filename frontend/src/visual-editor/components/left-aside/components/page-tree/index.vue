@@ -8,7 +8,6 @@
     @current-change="handleCurrentChange"
   >
     <el-table-column type="selection" width="55" />
-    <el-table-column type="index" width="50" />
     <el-table-column label="扫描图片列表">
       <template #default="scope">
         <div class="block">
@@ -53,6 +52,12 @@
 
   const { images } = storeToRefs(workspaceStore);
 
+  const sortmethod = (a, b) => {
+    console.log(a.name);
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
+    return 0;
+  };
   onMounted(() => {
     emitter.on('export-action', (type) => {
       switch (type) {
@@ -95,6 +100,7 @@
         animation: 150,
         onEnd: (evt) => {
           ElMessage.success(`成功移动第 ${evt.oldIndex} 行到第 ${evt.newIndex} 行`);
+          console.log(evt);
         },
       },
     },

@@ -70,6 +70,7 @@
 
   const scanMode = ref(true);
   const scan = () => {
+    workspaceStore.setIsScanning(true);
     const scanparams: ScanParams = {
       type: imageSetting.value.type,
       resolution: imageSetting.value.resolution,
@@ -89,7 +90,8 @@
         workspaceStore.setCurrentImage(response.currentImageItem);
         workspaceStore.addImage(response.imageItem);
       })
-      .catch((error) => {});
+      .catch((error) => {})
+      .finally(() => workspaceStore.setIsScanning(false));
   };
 </script>
 
