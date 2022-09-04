@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import ipcInvoke from '@/api/ipcRenderer';
 import { ImageItem, ImageSetting, CurrentImageItem } from '@/common/types';
-import { ElMessage, ElNotification } from 'element-plus';
+import { ElNotification } from 'element-plus';
 
 type WorkspaceState = {
   workspace: string;
@@ -19,7 +19,7 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       currentImage: null,
       isScanning: false,
       isImageChanging: false,
-      images: [],
+      images: reactive([]) as ImageItem[],
       imageSetting: {
         prefix: 'microbox',
         type: '',
@@ -56,7 +56,6 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
         .then((currentImage) => {
           this.currentImage = currentImage;
           ElNotification({
-            title: '更换图片',
             type: 'success',
             message: '当前图片: ' + this.currentImage?.name,
           });
@@ -91,7 +90,6 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
     async syncImages() {
       console.log(this.workspace);
       if (this.workspace) {
-        this.images = [];
         this.images = await ipcInvoke('controller.image.getImagesFromWorkspace', {
           workspace: this.workspace,
           prefix: this.imageSetting.prefix,

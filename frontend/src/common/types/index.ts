@@ -7,6 +7,7 @@ export interface NavItem {
 export interface ImageItem {
   name: string;
   path: string;
+  isShow: boolean;
   format: string;
   thumbnailpath: string;
 }

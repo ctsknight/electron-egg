@@ -30,6 +30,7 @@ class ImageController extends Controller {
           name: item.name,
           path: args.workspace + '/' + item.name,
           format: path.extname(item.name).substring(1),
+          isShow: true,
           thumbnailpath: 'scanner-file-protocol://' + args.workspace + '/thumbnail/' + item.name.split('.')[0]+'.jpg'
         };
       });
@@ -51,6 +52,7 @@ class ImageController extends Controller {
       filename += args.prefix+'_'+new Date().getTime()+'.'+scanparams.type;
     } else {
       filename += args.currentImageName;
+      scanparams.type = path.extname(filename).substring(1)
     }
     console.log(filename)
 
@@ -68,6 +70,7 @@ class ImageController extends Controller {
           name: filename,
           path: basePath + '/' + filename,
           format: data.format,
+          isShow: true,
           thumbnailpath: 'scanner-file-protocol://' + basePath + '/thumbnail/' + thumbnailname
         }, currentImageItem: {
           name: filename,

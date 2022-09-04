@@ -237,10 +237,6 @@ export const useTools = () => {
         })
           .then(() => {
             emitter.emit('editor-action', 'save');
-            ElMessage({
-              type: 'success',
-              message: '保存成功',
-            });
           })
           .catch(() => {
             ElMessage({

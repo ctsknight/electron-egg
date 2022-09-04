@@ -10,6 +10,7 @@
   import { inject } from 'vue';
   import Cropper from 'cropperjs';
   import 'cropperjs/dist/cropper.css';
+  import { ElMessage } from 'element-plus';
 
   export default {
     name: 'Editor',
@@ -43,10 +44,15 @@
     },
     methods: {
       doAction(action) {
+        const eventActions = ['clear', 'restore', 'finished', 'save', 'preview'];
         const { cropper } = this;
         console.log(action);
-        if (!cropper) {
+        if (!cropper && !eventActions.includes(action)) {
           console.log('not cropper to doAction: ' + action);
+          ElMessage({
+            type: 'error',
+            message: '图片操作出差，无法执行此命令: ' + action,
+          });
           return;
         }
         switch (action) {

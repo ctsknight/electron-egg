@@ -24,6 +24,7 @@
   import { PictureFilled } from '@element-plus/icons-vue';
   import Editor from './components/editor.vue';
   import ipcInvoke from '@/api/ipcRenderer';
+  import { ElNotification } from 'element-plus';
 
   export default {
     components: {
@@ -33,16 +34,29 @@
     },
     setup() {
       const store = useWorkSpaceStore();
-      const { currentImage, isImageChanging } = storeToRefs(store);
+      const { images, currentImage, isImageChanging } = storeToRefs(store);
 
       const editorRef = ref(null);
 
-      const saveimage = async (area) => {
-        await ipcInvoke('controller.image.ipcCropImage', {
+      const saveimage = (area) => {
+        ipcInvoke('controller.image.ipcCropImage', {
           area: JSON.stringify(area),
           name: currentImage.value.name,
           format: currentImage.value.format,
-        });
+        })
+          .then(() => {
+            const foundImage = images.value.find((i) => i.name == currentImage.value.name);
+            if (foundImage) {
+              foundImage.isShow = false;
+              setTimeout(() => (foundImage.isShow = true), 1000);
+            }
+          })
+          .catch((error) => {
+            ElNotification({
+              type: 'error',
+              message: '保存剪切图片出错: ' + error.message,
+            });
+          });
       };
 
       const preview = () => {
