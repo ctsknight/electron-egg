@@ -23,6 +23,7 @@ export const useTools = () => {
     loaded: false,
     cropped: false,
     cropping: false,
+    saved: false,
   });
   emitter.on('editor-update', (data) => {
     console.log(data);
@@ -45,7 +46,7 @@ export const useTools = () => {
         emitter.emit('editor-action', 'move');
       },
       isShow: () => {
-        return state.loaded;
+        return state.loaded && !state.cropped;
       },
     },
     {
@@ -62,7 +63,7 @@ export const useTools = () => {
         emitter.emit('editor-action', 'crop');
       },
       isShow: () => {
-        return state.loaded;
+        return state.loaded && !state.cropped;
       },
     },
     {
@@ -215,7 +216,7 @@ export const useTools = () => {
         emitter.emit('editor-action', 'restore');
       },
       isShow: () => {
-        return state.cropped;
+        return state.cropped && !state.saved;
       },
     },
 
@@ -237,6 +238,7 @@ export const useTools = () => {
         })
           .then(() => {
             emitter.emit('editor-action', 'save');
+            state.saved = true;
           })
           .catch(() => {
             ElMessage({
@@ -246,7 +248,7 @@ export const useTools = () => {
           });
       },
       isShow: () => {
-        return state.cropped;
+        return state.cropped && !state.saved;
       },
     },
     {
