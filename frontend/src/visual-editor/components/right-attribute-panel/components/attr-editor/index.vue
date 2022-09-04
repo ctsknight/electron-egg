@@ -16,6 +16,9 @@
         <span class="custom-title">{{ currentWorkspace }}</span>
       </template>
     </van-cell>
+    <van-cell center title="当前图片：">
+      <template #value> {{ currentImageName }} </template>
+    </van-cell>
   </van-cell-group>
   <van-form>
     <van-cell-group>
@@ -87,7 +90,7 @@
   import { storeToRefs } from 'pinia';
   const workspaceStore = useWorkSpaceStore();
 
-  const { workspace, imageSetting } = storeToRefs(workspaceStore);
+  const { workspace, imageSetting, currentImage } = storeToRefs(workspaceStore);
 
   const currentWorkspace = computed(() => {
     if (workspace && workspace.value) {
@@ -96,6 +99,12 @@
     return '未选择工作目录路径';
   });
 
+  const currentImageName = computed(() => {
+    if (currentImage && currentImage.value) {
+      return currentImage.value.name;
+    }
+    return '';
+  });
   const changeWorkspacePath = async () => {
     await workspaceStore.changeWorkspace();
     workspaceStore.syncImages();
