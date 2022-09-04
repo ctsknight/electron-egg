@@ -45,7 +45,6 @@
       doAction(action) {
         const eventActions = ['clear', 'restore', 'finished', 'save', 'preview'];
         const { cropper } = this;
-        console.log('doAction: ', this.data);
         if (!cropper && !eventActions.includes(action)) {
           console.log('not cropper to doAction: ' + action);
           return;
@@ -287,6 +286,7 @@
           loaded: true,
           cropped: data.cropped,
           cropping: data.cropping,
+          saved: false,
         });
       },
     },
