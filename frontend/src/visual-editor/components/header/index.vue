@@ -64,9 +64,9 @@
   const tools = useTools();
 
   import { CameraFilled } from '@element-plus/icons-vue';
-  import { ScanParams, ImageItem } from '@/common/types';
+  import { ScanParams } from '@/common/types';
   const workspaceStore = useWorkSpaceStore();
-  const { workspace, imageSetting, currentImage, images } = storeToRefs(workspaceStore);
+  const { workspace, imageSetting, currentImage } = storeToRefs(workspaceStore);
 
   const scanMode = ref(true);
   const scan = () => {
@@ -86,11 +86,21 @@
       currentImageName: currentImage.value?.name,
     })
       .then((response) => {
-        console.log(response);
+        console.log('ipcScanImage: ' + scanMode.value);
         workspaceStore.setCurrentImage(response.currentImageItem);
-        workspaceStore.addImage(response.imageItem);
+        if (!scanMode.value) {
+          workspaceStore.updateThumbnaiImage(currentImage.value?.name, response.thumbnailUrl);
+        } else {
+          workspaceStore.addImage(response.imageItem);
+        }
       })
-      .catch((error) => {})
+      .catch((error) => {
+        console.error(error);
+        ElNotification({
+          type: 'error',
+          message: '扫描图片出错: ' + error.message,
+        });
+      })
       .finally(() => workspaceStore.setIsScanning(false));
   };
 </script>

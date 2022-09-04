@@ -107,6 +107,27 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       });
     },
 
+    updateThumbnaiImage(name: string, externalUrl: string) {
+      console.log('updateThumbnaiImage', name);
+      const foundImage = this.images.find((i) => i.name === name);
+      console.log(foundImage);
+      if (foundImage) {
+        if (externalUrl) {
+          foundImage.thumbnailpath = externalUrl;
+        } else {
+          ipcInvoke('controller.image.ipcGetThumbnaiImageBase64', {
+            workspace: this.workspace,
+            filename: foundImage.name,
+          })
+            .then((url) => {
+              foundImage.thumbnailpath = url;
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
+      }
+    },
     async retrieveImageSetting() {
       this.imageSetting = await ipcInvoke('controller.setting.getImageSetting', '');
       console.log(this.imageSetting);

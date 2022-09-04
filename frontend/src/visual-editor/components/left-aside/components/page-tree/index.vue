@@ -11,7 +11,7 @@
     <el-table-column label="扫描图片列表">
       <template #default="scope">
         <div class="block">
-          <el-image :src="scope.row.thumbnailpath" fit="fill" lazy v-show="scope.row.isShow">
+          <el-image :src="scope.row.thumbnailpath" fit="fill" lazy>
             <template #placeholder>
               <div class="image-slot">Loading<span class="dot">...</span></div>
             </template>

@@ -79,7 +79,8 @@ class ImageController extends Controller {
           path: basePath + '/' + filename,
           cropped: false,
           cropping: false,
-        }
+        },
+        thumbnailUrl: data.thumbnailUrl
         };
   
       } else {
@@ -153,6 +154,19 @@ class ImageController extends Controller {
       cropped: false,
       cropping: false,
     }
+  }
+
+  async ipcGetThumbnaiImageBase64(args, event) {
+
+    console.log('ipcGetThumbnaiImageBase64: ' + JSON.stringify(args));
+    const path = args.workspace + '/thumbnail/'+args.filename.split('.')[0]+'.jpg';
+    const imageBuffer = await this.service.image.getImageBuffer(path);
+    let url = ''
+    if (imageBuffer) {
+      url ='data:image/jpeg;base64, '+imageBuffer.toString('base64');
+    }
+    
+    return url
   }
 
   async ipcConvertImagesToPDF(args, event) {

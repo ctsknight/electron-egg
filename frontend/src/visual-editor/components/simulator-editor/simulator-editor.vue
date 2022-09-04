@@ -1,6 +1,5 @@
 <template>
   <div class="simulator-container">
-    <!--vue-pdf-embed :source="currentImage?.path" v-if="currentImage?.format == '.pdf'" /-->
     <main class="main" v-loading="isImageChanging">
       <editor
         v-if="currentImage"
@@ -20,7 +19,6 @@
   import { ref } from 'vue';
   import { useWorkSpaceStore } from '@/store/workspace';
   import { storeToRefs } from 'pinia';
-  import VuePdfEmbed from 'vue-pdf-embed';
   import { PictureFilled } from '@element-plus/icons-vue';
   import Editor from './components/editor.vue';
   import ipcInvoke from '@/api/ipcRenderer';
@@ -28,13 +26,12 @@
 
   export default {
     components: {
-      VuePdfEmbed,
       Editor,
       PictureFilled,
     },
     setup() {
       const store = useWorkSpaceStore();
-      const { images, currentImage, isImageChanging } = storeToRefs(store);
+      const { currentImage, isImageChanging } = storeToRefs(store);
 
       const editorRef = ref(null);
 
@@ -44,14 +41,11 @@
           name: currentImage.value.name,
           format: currentImage.value.format,
         })
-          .then(() => {
-            const foundImage = images.value.find((i) => i.name == currentImage.value.name);
-            if (foundImage) {
-              foundImage.isShow = false;
-              setTimeout(() => (foundImage.isShow = true), 1000);
-            }
+          .then(async () => {
+            store.updateThumbnaiImage(currentImage.value.name);
           })
           .catch((error) => {
+            console.error(error);
             ElNotification({
               type: 'error',
               message: '保存剪切图片出错: ' + error.message,
