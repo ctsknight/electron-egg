@@ -31,7 +31,7 @@ class ImageController extends Controller {
           path: args.workspace + '/' + item.name,
           format: path.extname(item.name).substring(1),
           isShow: true,
-          thumbnailpath: 'scanner-file-protocol://' + args.workspace + '/thumbnail/' + item.name.split('.')[0]+'.jpg'
+          thumbnailpath: 'scanner-file-protocol://' + args.workspace + '/thumbnail/' + item.name.split('.')[0]+'.jpeg'
         };
       });
   }
@@ -63,7 +63,7 @@ class ImageController extends Controller {
 
       if (status===200) {
 
-        const thumbnailname = filename.split('.')[0]+'.jpg';
+        const thumbnailname = filename.split('.')[0]+'.jpeg';
         this.service.image.downloadScannedImage(basePath, filename, thumbnailname, data.imageUrl, data.thumbnailUrl)
         return { 
           imageItem:{
