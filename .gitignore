@@ -9,3 +9,4 @@ data/
 public/**
 .DS_Store
 electron/resource/
+frontend/public/

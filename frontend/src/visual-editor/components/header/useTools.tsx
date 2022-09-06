@@ -140,6 +140,7 @@ export const useTools = () => {
         return state.loaded && !state.cropping && !state.cropped;
       },
     },
+    /**
     {
       title: '左右置换',
       icon: Switch,
@@ -158,6 +159,7 @@ export const useTools = () => {
         return state.loaded && !state.cropping && !state.cropped;
       },
     },
+    
     {
       title: '上下置换',
       icon: Sort,
@@ -175,7 +177,7 @@ export const useTools = () => {
       isShow: () => {
         return state.loaded && !state.cropping && !state.cropped;
       },
-    },
+    },*/
     {
       title: '清除',
       icon: RemoveFilled,
