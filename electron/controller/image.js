@@ -1,13 +1,11 @@
 "use strict";
 
-const _ = require("lodash");
 const path = require("path");
 const fs = require("fs");
-const is = require("electron-is");
 const { exec } = require("child_process");
 const Controller = require("ee-core").Controller;
 const imgToPDF = require('image-to-pdf')
-
+const {dialog} = require('electron');
 /**
  * 示例控制器
  * @class
@@ -26,13 +24,14 @@ class ImageController extends Controller {
 
     return fs
       .readdirSync(args.workspace, { withFileTypes: true })
-      .filter((item) => !item.isDirectory()&& path.extname(item.name).match(/\.(jpe?g|png|tiff|bmp)$/))
+      .filter((item) => !item.isDirectory()&& path.extname(item.name).match(/\.(jpe?g|png|tiff|bmp)$/) && item.name.startsWith(args.prefix))
       .map((item) =>  {
         return {
           name: item.name,
           path: args.workspace + '/' + item.name,
           format: path.extname(item.name).substring(1),
-          thumbnailpath: 'scanner-file-protocol://' + args.workspace + '/thumbnail/' + item.name
+          isShow: true,
+          thumbnailpath: 'scanner-file-protocol://' + args.workspace + '/thumbnail/' + item.name.split('.')[0]+'.jpeg'
         };
       });
   }
@@ -47,25 +46,66 @@ class ImageController extends Controller {
     console.log("ipcScanImage : " + JSON.stringify(args));
     const basePath = args.workspace;
     const scanparams = JSON.parse(args.scanparams);
+    const baseUrl = this.service.storage.getBaseUrl();
     let filename = '';
     if (args.mode === 'new_scan') {
 
       filename += args.prefix+'_'+new Date().getTime()+'.'+scanparams.type;
     } else {
       filename += args.currentImageName;
+      scanparams.type = path.extname(filename).substring(1)
     }
     console.log(filename)
 
-    const result = await this.service.image.scanImage(
-      scanparams,
-      filename
-    );
-    return {
-      name: filename,
-      path: basePath+'/' + filename,
-      format: path.extname(filename).substring(1),
-      thumbnailpath: 'scanner-file-protocol://' + basePath+'/thumbnail/' + filename
-    };
+    try {
+
+      const responose = await this.service.image.scanImage(
+        scanparams
+      );
+
+      const {status, message, data} = await this.service.image.scanImage(
+        scanparams
+      );
+
+      if (status===200) {
+
+        const thumbnailname = filename.split('.')[0]+'.jpeg';
+        const imageUlr = baseUrl + data.imageUrl;
+        const thumbnailUrl = baseUrl + data.thumbnailUrl;
+        this.service.image.downloadScannedImage(basePath, filename, thumbnailname, imageUlr, thumbnailUrl)
+        return { 
+          imageItem:{
+          name: filename,
+          path: basePath + '/' + filename,
+          format: data.format,
+          isShow: true,
+          thumbnailpath: 'scanner-file-protocol://' + basePath + '/thumbnail/' + thumbnailname
+        }, currentImageItem: {
+          name: filename,
+          url: baseUrl + data.currentImageUrl,
+          previousUrl: '',
+          path: basePath + '/' + filename,
+          cropped: false,
+          cropping: false,
+        },
+        thumbnailUrl: thumbnailUrl
+        };
+  
+      } else {
+        throw message
+      }
+  
+    } catch (err) {
+      this.app.logger.error('ipcScanImage: '+err.message)
+      dialog.showMessageBoxSync({
+        type: 'error', // "none", "info", "error", "question" 或者 "warning"
+        title: '扫描错误',
+        message: err.message,
+        detail: ''
+      })
+    }
+
+
   }
 
   /**
@@ -77,15 +117,31 @@ class ImageController extends Controller {
 
     console.log('ipcCropImage: ' + JSON.stringify(args));
     const params = args;
+    console.log('ipcCropImage: ' + args.name);
+
     const area = JSON.parse(params.area);
     const imageDir = this.service.storage.getWorkspaceSettingData();
-    await this.service.image.cropImage(
-      {left: Math.round(area.x), top: Math.round(area.y), width: Math.round(area.width), height: Math.round(area.height)},
-      imageDir+'/'+params.name,
-      imageDir+'/cropped_'+params.name
-    );
+    try {
+      await this.service.image.cropImage(
+        area.rotate,
+        {left: Math.round(area.x), top: Math.round(area.y), width: Math.round(area.width), height: Math.round(area.height)},
+        params.format,
+        imageDir,
+        params.name,
+        '/cropped_'+params.name
+      );
+      exec('mv '+imageDir+'/cropped_'+params.name+' '+ imageDir+'/'+params.name);
+    } catch (err) {
+      this.app.logger.error('ipcCropImage: '+err.message)
+      dialog.showMessageBoxSync({
+        type: 'error', // "none", "info", "error", "question" 或者 "warning"
+        title: '剪切保存错误',
+        message: err.message,
+        detail: ''
+      })
+
+    }
   
-    exec('mv '+imageDir+'/cropped_'+params.name+' '+ imageDir+'/'+params.name);
   }
 
   async ipcGetCurrentImage(args, event) {
@@ -101,10 +157,24 @@ class ImageController extends Controller {
       name: params.name,
       url: url,
       previousUrl: '',
+      format: args.format,
       path: params.path,
       cropped: false,
       cropping: false,
     }
+  }
+
+  async ipcGetThumbnaiImageBase64(args, event) {
+
+    console.log('ipcGetThumbnaiImageBase64: ' + JSON.stringify(args));
+    const path = args.workspace + '/thumbnail/'+args.filename.split('.')[0]+'.jpeg';
+    const imageBuffer = await this.service.image.getImageBuffer(path);
+    let url = ''
+    if (imageBuffer) {
+      url ='data:image/jpeg;base64, '+imageBuffer.toString('base64');
+    }
+    
+    return url
   }
 
   async ipcConvertImagesToPDF(args, event) {

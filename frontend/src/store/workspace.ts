@@ -1,9 +1,12 @@
 import { defineStore } from 'pinia';
 import ipcInvoke from '@/api/ipcRenderer';
 import { ImageItem, ImageSetting, CurrentImageItem } from '@/common/types';
+import { ElNotification } from 'element-plus';
 
 type WorkspaceState = {
   workspace: string;
+  isScanning: boolean;
+  isImageChanging: boolean;
   currentImage: null | CurrentImageItem;
   images: ImageItem[];
   imageSetting: ImageSetting;
@@ -14,7 +17,9 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
     return {
       workspace: '',
       currentImage: null,
-      images: [],
+      isScanning: false,
+      isImageChanging: false,
+      images: reactive([]) as ImageItem[],
       imageSetting: {
         prefix: 'microbox',
         type: '',
@@ -35,15 +40,51 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       const path: string = await ipcInvoke('controller.disk.selectFolder', '');
       if (path) {
         this.workspace = path;
-        ipcInvoke('controller.setting.setWorkspaceSetting', { workspace: path });
+        ipcInvoke('controller.setting.setWorkspaceSetting', {
+          workspace: path,
+        });
       }
     },
 
-    async changeCurrentImage(image: ImageItem) {
-      this.currentImage = await ipcInvoke('controller.image.ipcGetCurrentImage', {
+    changeCurrentImage(image: ImageItem) {
+      this.isImageChanging = true;
+      ipcInvoke('controller.image.ipcGetCurrentImage', {
         name: image.name,
+        format: image.format,
         path: image.path,
-      });
+      })
+        .then((currentImage) => {
+          this.currentImage = currentImage;
+          ElNotification({
+            type: 'success',
+            message: '当前图片: ' + this.currentImage?.name,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          ElNotification({
+            type: 'error',
+            message: '载入图片出错: ' + error.message,
+          });
+        })
+        .finally(() => {
+          this.isImageChanging = false;
+        });
+    },
+    setIsScanning(isScanning: boolean) {
+      this.isScanning = isScanning;
+    },
+
+    setIsImageChanging(isImageChanging: boolean) {
+      this.isImageChanging = isImageChanging;
+    },
+
+    setCurrentImage(currentImage: CurrentImageItem) {
+      this.currentImage = currentImage;
+    },
+
+    addImage(image: ImageItem) {
+      this.images.push(image);
     },
 
     async syncImages() {
@@ -51,6 +92,7 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       if (this.workspace) {
         this.images = await ipcInvoke('controller.image.getImagesFromWorkspace', {
           workspace: this.workspace,
+          prefix: this.imageSetting.prefix,
         });
 
         if (this.images && this.images.length > 0) {
@@ -65,6 +107,30 @@ export const useWorkSpaceStore = defineStore<string, WorkspaceState>('workspaceS
       });
     },
 
+    updateThumbnaiImage(name: string, externalUrl: string) {
+      console.log('updateThumbnaiImage', name);
+      const foundImage = this.images.find((i) => i.name === name);
+      console.log('updateThumbnaiImage', foundImage);
+      if (foundImage) {
+        if (externalUrl) {
+          console.log('updateThumbnaiImage :', externalUrl);
+          foundImage.thumbnailpath = externalUrl;
+        } else {
+          console.log('updateThumbnaiImage - ipcGetThumbnaiImageBase64');
+
+          ipcInvoke('controller.image.ipcGetThumbnaiImageBase64', {
+            workspace: this.workspace,
+            filename: foundImage.name,
+          })
+            .then((url) => {
+              foundImage.thumbnailpath = url;
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
+      }
+    },
     async retrieveImageSetting() {
       this.imageSetting = await ipcInvoke('controller.setting.getImageSetting', '');
       console.log(this.imageSetting);

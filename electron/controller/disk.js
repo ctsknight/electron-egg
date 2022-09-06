@@ -12,6 +12,7 @@ const {dialog, shell, BrowserWindow, BrowserView,
   Notification, powerMonitor, screen, nativeTheme} = require('electron');
 const autoLaunchManager = require('../library/autoLaunch');
 const dayjs = require('dayjs');
+const { rules } = require('eslint-plugin-prettier');
 
 let myTimer = null;
 let browserViewObj = null;
@@ -47,38 +48,6 @@ class  DiskController extends Controller {
     return result;
   }
 
-  /**
-   * json数据库操作
-   */   
-  async dbOperation(args) {
-    const { service } = this;
-    const paramsObj = args;
-    //console.log('eeeee paramsObj:', paramsObj);
-    const data = {
-      action: paramsObj.action,
-      result: null,
-      all_list: []
-    };
-    
-    switch (paramsObj.action) {
-      case 'add' :
-        data.result = await service.storage.addTestData(paramsObj.info);;
-        break;
-      case 'del' :
-        data.result = await service.storage.delTestData(paramsObj.delete_name);;
-        break;
-      case 'update' :
-        data.result = await service.storage.updateTestData(paramsObj.update_name, paramsObj.update_age);
-        break;
-      case 'get' :
-        data.result = await service.storage.getTestData(paramsObj.search_age);
-        break;
-    }
-
-    data.all_list = await service.storage.getAllTestData();
-
-    return data;
-  }
 
   /**
    * 消息提示对话框
@@ -116,15 +85,34 @@ class  DiskController extends Controller {
    * 选择目录
    */
   selectFolder () {
-    const filePaths = dialog.showOpenDialogSync({
-      properties: ['openDirectory', 'createDirectory']
-    });
 
-    if (_.isEmpty(filePaths)) {
-      return null
-    }
-
-    return filePaths[0];
+    try {
+      const filePaths = dialog.showOpenDialogSync({
+        properties: ['openDirectory', 'createDirectory']
+      });
+  
+      if (_.isEmpty(filePaths)) {
+        throw '路径不正确！'
+      }
+  
+      const workspace = filePaths[0];
+  
+      const thumbnailDir = workspace + '/thumbnail/';
+      if (!fs.existsSync(thumbnailDir)){
+        fs.mkdirSync(thumbnailDir);
+      }
+      return workspace;
+    } catch (err) {
+      this.app.logger.error(err.message);
+      dialog.showMessageBoxSync({
+        type: 'error', // "none", "info", "error", "question" 或者 "warning"
+        title: '更换workspace错误',
+        message: err.message,
+        detail: ''
+      })
+      return null;
+    };
+    
   } 
 
   /**

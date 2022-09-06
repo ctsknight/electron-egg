@@ -1,7 +1,6 @@
 <template>
   <div class="simulator-container">
-    <!--vue-pdf-embed :source="currentImage?.path" v-if="currentImage?.format == '.pdf'" /-->
-    <main class="main">
+    <main class="main" v-loading="isImageChanging">
       <editor
         v-if="currentImage"
         :data="currentImage"
@@ -20,28 +19,38 @@
   import { ref } from 'vue';
   import { useWorkSpaceStore } from '@/store/workspace';
   import { storeToRefs } from 'pinia';
-  import VuePdfEmbed from 'vue-pdf-embed';
   import { PictureFilled } from '@element-plus/icons-vue';
   import Editor from './components/editor.vue';
   import ipcInvoke from '@/api/ipcRenderer';
+  import { ElNotification } from 'element-plus';
 
   export default {
     components: {
-      VuePdfEmbed,
       Editor,
       PictureFilled,
     },
     setup() {
       const store = useWorkSpaceStore();
-      const { currentImage } = storeToRefs(store);
+      const { currentImage, isImageChanging } = storeToRefs(store);
 
       const editorRef = ref(null);
 
-      const saveimage = async (area) => {
-        await ipcInvoke('controller.image.ipcCropImage', {
+      const saveimage = (area) => {
+        ipcInvoke('controller.image.ipcCropImage', {
           area: JSON.stringify(area),
           name: currentImage.value.name,
-        });
+          format: currentImage.value.format,
+        })
+          .then(async () => {
+            store.updateThumbnaiImage(currentImage.value.name);
+          })
+          .catch((error) => {
+            console.error(error);
+            ElNotification({
+              type: 'error',
+              message: '保存剪切图片出错: ' + error.message,
+            });
+          });
       };
 
       const preview = () => {
@@ -51,7 +60,7 @@
       };
 
       const updateKey = ref(0);
-      return { currentImage, editorRef, saveimage, preview, updateKey };
+      return { currentImage, editorRef, saveimage, preview, updateKey, isImageChanging };
     },
     watch: {
       currentImage(newValue, oldValue) {

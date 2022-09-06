@@ -43,10 +43,12 @@
     },
     methods: {
       doAction(action) {
+        const eventActions = ['clear', 'restore', 'finished', 'save', 'preview'];
         const { cropper } = this;
-        console.log(action);
-        console.log(this.data);
-
+        if (!cropper && !eventActions.includes(action)) {
+          console.log('not cropper to doAction: ' + action);
+          return;
+        }
         switch (action) {
           case 'move':
           case 'crop':
@@ -82,7 +84,7 @@
           case 'save':
             console.log('croppedData:  ' + JSON.stringify(this.croppedData));
             this.$emit('save-event', this.croppedData);
-
+            break;
           case 'preview':
             console.log('preview:  ');
             this.$emit('preview-event');
@@ -182,9 +184,9 @@
         }
       },
       start() {
-        this.stop();
         const { data } = this;
         if (data.cropped || this.cropper) {
+          console.log('cropper started return');
           return;
         }
         console.log('cropper started');
@@ -219,6 +221,7 @@
       },
       stop() {
         if (this.cropper) {
+          console.log('cropping stopped');
           this.cropper.destroy();
           this.cropper = null;
         }
@@ -283,6 +286,7 @@
           loaded: true,
           cropped: data.cropped,
           cropping: data.cropping,
+          saved: false,
         });
       },
     },

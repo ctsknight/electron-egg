@@ -7,7 +7,7 @@
  * @FilePath: \vite-vue3-lowcode\src\visual-editor\index.vue
 -->
 <template>
-  <el-container>
+  <el-container v-loading="isScanning" element-loading-text="扫描中...">
     <el-header height="80px" class="flex items-center shadow-md">
       <!-- 顶部start -->
       <Header />
@@ -37,6 +37,12 @@
   import LeftAside from './components/left-aside/index.vue';
   import RightAttributePanel from './components/right-attribute-panel';
   import SimulatorEditor from './components/simulator-editor/simulator-editor.vue';
+
+  import { useWorkSpaceStore } from '@/store/workspace';
+  import { storeToRefs } from 'pinia';
+  const workspaceStore = useWorkSpaceStore();
+
+  const { isScanning } = storeToRefs(workspaceStore);
 </script>
 
 <style lang="scss">

@@ -7,6 +7,7 @@ export interface NavItem {
 export interface ImageItem {
   name: string;
   path: string;
+  isShow: boolean;
   format: string;
   thumbnailpath: string;
 }
@@ -16,6 +17,7 @@ export interface CurrentImageItem {
   url: string;
   previousUrl: string;
   path: string;
+  format: string;
   cropped: boolean;
   cropping: boolean;
 }

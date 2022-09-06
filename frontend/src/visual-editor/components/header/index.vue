@@ -57,6 +57,7 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue';
+  import { ElNotification } from 'element-plus';
   import ipcInvoke from '@/api/ipcRenderer';
   import { useWorkSpaceStore } from '@/store/workspace';
   import { storeToRefs } from 'pinia';
@@ -64,18 +65,19 @@
   const tools = useTools();
 
   import { CameraFilled } from '@element-plus/icons-vue';
-  import { ScanParams, ImageItem } from '@/common/types';
+  import { ScanParams } from '@/common/types';
   const workspaceStore = useWorkSpaceStore();
-  const { workspace, imageSetting, currentImage, images } = storeToRefs(workspaceStore);
+  const { workspace, imageSetting, currentImage } = storeToRefs(workspaceStore);
 
   const scanMode = ref(true);
-  const scan = async () => {
+  const scan = () => {
+    workspaceStore.setIsScanning(true);
     const scanparams: ScanParams = {
       type: imageSetting.value.type,
       resolution: imageSetting.value.resolution,
     };
 
-    const imageItem: ImageItem = await ipcInvoke('controller.image.ipcScanImage', {
+    ipcInvoke('controller.image.ipcScanImage', {
       mode: scanMode.value ? 'new_scan' : 'repeat_scan',
       scanparams: JSON.stringify(scanparams),
       prefix: imageSetting.value.prefix,
@@ -83,8 +85,24 @@
       croppedArea: JSON.stringify(imageSetting.value.croppedArea),
       workspace: workspace.value,
       currentImageName: currentImage.value?.name,
-    });
-    console.log(imageItem);
+    })
+      .then((response) => {
+        console.log('ipcScanImage: ' + scanMode.value);
+        workspaceStore.setCurrentImage(response.currentImageItem);
+        if (!scanMode.value) {
+          workspaceStore.updateThumbnaiImage(currentImage.value?.name, response.thumbnailUrl);
+        } else {
+          workspaceStore.addImage(response.imageItem);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        ElNotification({
+          type: 'error',
+          message: '扫描图片出错: ' + error.message,
+        });
+      })
+      .finally(() => workspaceStore.setIsScanning(false));
   };
 </script>
 
