@@ -12,7 +12,6 @@ const {dialog, shell, BrowserWindow, BrowserView,
   Notification, powerMonitor, screen, nativeTheme} = require('electron');
 const autoLaunchManager = require('../library/autoLaunch');
 const dayjs = require('dayjs');
-const { rules } = require('eslint-plugin-prettier');
 
 let myTimer = null;
 let browserViewObj = null;

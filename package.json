@@ -40,9 +40,7 @@
       "output": "out"
     },
     "asar": true,
-    "asarUnpack": [
-      "**/node_modules/sharp/**/*"
-    ],
+    "asarUnpack": [ "**/node_modules/sharp/**/*" ],
     "files": [
       "**/*",
       "!frontend/",
