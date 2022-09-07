@@ -1,6 +1,6 @@
 {
   "name": "microbox-scanner",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "MicroBox Scanner for Linux",
   "main": "main.js",
   "scripts": {
@@ -33,7 +33,7 @@
     "events": {}
   },
   "build": {
-    "productName": "MicroboxScanner",
+    "productName": "microbox-scanner",
     "appId": "com.deepin.microbox-scanner",
     "copyright": "zhenyugeng",
     "directories": {
