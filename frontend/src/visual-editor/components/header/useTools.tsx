@@ -7,8 +7,6 @@ import {
   RefreshLeft,
   RefreshRight,
   Refresh,
-  Switch,
-  Sort,
   Crop,
   Download,
   RemoveFilled,
@@ -33,7 +31,7 @@ export const useTools = () => {
   });
   return [
     {
-      title: '移动',
+      title: 'Move',
       icon: Pointer,
       onClick: () => {
         if (state.loaded && !state.cropped) {
@@ -51,7 +49,7 @@ export const useTools = () => {
       },
     },
     {
-      title: '剪切',
+      title: 'Crop',
       icon: Crop,
       onClick: () => {
         if (state.loaded && !state.cropped) {
@@ -69,7 +67,7 @@ export const useTools = () => {
       },
     },
     {
-      title: '放大',
+      title: 'ZoomIn',
       icon: ZoomIn,
       onClick: () => {
         if (state.loaded && !state.cropping && !state.cropped) {
@@ -87,7 +85,7 @@ export const useTools = () => {
       },
     },
     {
-      title: '缩小',
+      title: 'ZoomOut',
       icon: ZoomOut,
       onClick: () => {
         if (state.loaded && !state.cropping && !state.cropped) {
@@ -105,7 +103,7 @@ export const useTools = () => {
       },
     },
     {
-      title: '左旋',
+      title: 'RefreshLeft',
       icon: RefreshLeft,
       onClick: () => {
         if (state.loaded && !state.cropping && !state.cropped) {
@@ -123,7 +121,7 @@ export const useTools = () => {
       },
     },
     {
-      title: '右旋',
+      title: 'RefreshRight',
       icon: RefreshRight,
       onClick: () => {
         if (state.loaded && !state.cropping && !state.cropped) {
@@ -179,7 +177,7 @@ export const useTools = () => {
       },
     },*/
     {
-      title: '清除',
+      title: 'clear',
       icon: RemoveFilled,
       onClick: () => {
         if (!state.cropping) {
@@ -196,7 +194,7 @@ export const useTools = () => {
       },
     },
     {
-      title: '剪切完成',
+      title: 'Done',
       icon: SuccessFilled,
       onClick: () => {
         if (!state.cropping) {
@@ -213,7 +211,7 @@ export const useTools = () => {
       },
     },
     {
-      title: '重置',
+      title: 'Reset',
       icon: Refresh,
       onClick: () => {
         if (state.cropped && !state.saved) {
@@ -232,7 +230,7 @@ export const useTools = () => {
     },
 
     {
-      title: '保存本地',
+      title: 'Save',
       icon: Download,
       onClick: () => {
         if (state.cropped && !state.saved) {
@@ -263,7 +261,7 @@ export const useTools = () => {
       },
     },
     {
-      title: '预览',
+      title: 'Preview',
       icon: VideoPlay,
       onClick: () => {
         emitter.emit('editor-action', 'preview');

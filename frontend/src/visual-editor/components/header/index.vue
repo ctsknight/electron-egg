@@ -32,10 +32,9 @@
         <el-switch
           v-model="scanMode"
           size="large"
-          inline-prompt
           style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-          active-text="新扫"
-          inactive-text="重扫"
+          active-text="NewScan"
+          inactive-text="ReScan"
         />
       </el-tooltip>
     </el-col>

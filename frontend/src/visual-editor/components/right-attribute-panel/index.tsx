@@ -49,10 +49,10 @@ export default defineComponent({
               stretch={true}
               class={styles.tabs}
             >
-              <ElTabPane label="软件设置" name="attr">
+              <ElTabPane label="System Settings" name="attr">
                 <AttrEditor />
               </ElTabPane>
-              <ElTabPane label="扫描仪设置" name="animate">
+              <ElTabPane label="Scanner Settings" name="animate">
                 <ScannerSetting />
               </ElTabPane>
             </ElTabs>

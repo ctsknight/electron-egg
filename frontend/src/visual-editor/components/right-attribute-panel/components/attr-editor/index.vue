@@ -1,6 +1,6 @@
 <template>
   <van-cell-group style="margin-top: 20px; margin-bottom: 20px">
-    <van-cell center title="工作目录">
+    <van-cell center title="Workspace">
       <template #value>
         <van-icon
           name="replay"
@@ -16,27 +16,27 @@
         <span class="custom-title">{{ currentWorkspace }}</span>
       </template>
     </van-cell>
-    <van-cell center title="当前图片：">
+    <van-cell center title="Current Image：">
       <template #value> {{ currentImageName }} </template>
     </van-cell>
   </van-cell-group>
   <van-form>
     <van-cell-group>
-      <van-cell title="图片规格" style="margin-top: 30px">
+      <van-cell title="Image Setting" style="margin-top: 30px">
         <template #right-icon>
-          <el-switch v-model="isChangeImageSetting" active-text="修改" inactive-text="保存" />
+          <el-switch v-model="isChangeImageSetting" active-text="Edit" inactive-text="Save" />
         </template>
       </van-cell>
       <van-field
         v-model="imageSetting.prefix"
         center
         clearable
-        label="图片名称前缀"
-        placeholder="图片名称前缀"
+        label="Image Prefix"
+        placeholder="Prefix"
         :disabled="!isChangeImageSetting"
         :rules="[{ required: true, message: '请填写扫描图片名称前缀' }]"
       />
-      <van-cell center title="图片类型">
+      <van-cell center title="Image Type">
         <template #value>
           <van-radio-group :disabled="!isChangeImageSetting" v-model="imageSetting.type">
             <van-radio name="tiff">TIFF</van-radio>
@@ -45,7 +45,7 @@
           </van-radio-group>
         </template>
       </van-cell>
-      <van-cell center title="分辨率">
+      <van-cell center title="Resolution">
         <template #value>
           <van-radio-group :disabled="!isChangeImageSetting" v-model="imageResolution">
             <van-radio name="200">200</van-radio>
@@ -67,14 +67,14 @@
   </van-cell-group>
  -->
   <van-cell-group style="margin-top: 30px">
-    <van-cell title="导出PDF">
+    <van-cell title="Export PDF">
       <template #right-icon>
         <van-icon name="share" color="#1989fa" size="28" @click="exportType('export-pdf')" />
       </template>
       <template #label>
         <van-radio-group v-model="pdfExportType" direction="horizontal" style="padding-top: 15px">
-          <van-radio name="single">单页导出</van-radio>
-          <van-radio name="multi">整体导出</van-radio>
+          <van-radio name="single">Single Export</van-radio>
+          <van-radio name="multi">Multi Export</van-radio>
         </van-radio-group>
       </template>
     </van-cell>
