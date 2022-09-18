@@ -27,8 +27,15 @@ class Main extends Appliaction {
    * main window have been loaded
    */
   async windowReady () {
-    // do some things
-
+    // do some things    
+    // 延迟加载，无白屏
+    const winOpt = this.config.windowsOption;
+    if (winOpt.show == false) {
+      const win = this.electron.mainWindow;
+      win.once('ready-to-show', () => {
+        win.show();
+      })
+    }
     protocol.registerFileProtocol('scanner-file-protocol', (request, callback) => {
       const url = request.url
         .replace('scanner-file-protocol://', '')

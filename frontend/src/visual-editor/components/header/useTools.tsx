@@ -14,7 +14,6 @@ import {
   Pointer,
 } from '@element-plus/icons-vue';
 import 'element-plus/es/components/message/style/css';
-
 export const useTools = () => {
   const emitter = inject('emitter');
   const state = reactive({
@@ -29,6 +28,7 @@ export const useTools = () => {
     state.cropping = data.cropping;
     state.saved = data.saved;
   });
+
   return [
     {
       title: 'Move',

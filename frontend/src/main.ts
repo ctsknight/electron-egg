@@ -12,6 +12,7 @@ import 'animate.css';
 
 import router from './router';
 import { setupStore } from './store';
+import { setupI18N } from './plugins/i18n';
 const emitter = mitt();
 const app = createApp(App);
 
@@ -21,6 +22,8 @@ setupStore(app);
 setupElementPlus(app);
 // 使用vant插件
 setupVant(app);
+// i18n
+setupI18N(app);
 
 app.config.globalProperties.$$refs = {};
 app.provide('emitter', emitter);

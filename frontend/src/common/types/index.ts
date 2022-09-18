@@ -4,6 +4,11 @@ export interface NavItem {
   isActive: boolean;
 }
 
+export interface ImageTypeSelectItem {
+  name: string;
+  value: string;
+}
+
 export interface ImageItem {
   name: string;
   path: string;

@@ -1,11 +1,9 @@
 "use strict";
 
 const Service = require("ee-core").Service;
-const sharp = require('sharp');
 const axios = require('axios');
 const fs = require("fs");
 const path = require("path");
-const cv = require('../library/opencv');
 
 /**
  * image服务
@@ -56,9 +54,9 @@ class ImageService extends Service {
       const filePath = path.join(workspace, filename);
       const outputPath = path.join(workspace, outputfile);
       if (format === 'tiff') {
-        await sharp(filePath).tiff({ compression: 'deflate' }).rotate(rotate).extract(area).withMetadata().toFile(outputPath);
+        // await sharp(filePath).tiff({ compression: 'deflate' }).rotate(rotate).extract(area).withMetadata().toFile(outputPath);
       } else {
-        await sharp(filePath).rotate(rotate).extract(area).withMetadata().toFile(outputPath);
+        // await sharp(filePath).rotate(rotate).extract(area).withMetadata().toFile(outputPath);
       }
       const thumbnailPath= workspace + '/thumbnail/'+filename.split('.')[0]+'.jpeg';
       await sharp(outputPath).resize(250,null).withMetadata().toFile(thumbnailPath)

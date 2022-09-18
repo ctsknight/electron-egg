@@ -1,5 +1,5 @@
 <template>
-  <el-config-provider :locale="zhCn">
+  <el-config-provider :locale="language">
     <router-view #="{ Component, route }">
       <component :is="Component" :key="route.path" />
     </router-view>
@@ -8,7 +8,6 @@
 
 <script setup lang="ts">
   import { provide } from 'vue';
-  import zhCn from 'element-plus/lib/locale/lang/zh-cn';
   import { initVisualData, injectKey, localKey } from '@/visual-editor/hooks/useVisualData';
 
   const visualData = initVisualData();

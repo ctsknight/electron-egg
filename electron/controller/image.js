@@ -4,7 +4,6 @@ const path = require("path");
 const fs = require("fs");
 const { exec } = require("child_process");
 const Controller = require("ee-core").Controller;
-const imgToPDF = require('image-to-pdf')
 const {dialog} = require('electron');
 /**
  * 示例控制器
@@ -193,11 +192,11 @@ class ImageController extends Controller {
     if (exportMode === 'single') { 
       exportImages.forEach(element => {
         console.log(element.name);
-        imgToPDF([element.url], imgToPDF.sizes.A4).pipe(fs.createWriteStream(imageDir+'/'+element.name.split('.')[0]+'.pdf'));
+        // imgToPDF([element.url], imgToPDF.sizes.A4).pipe(fs.createWriteStream(imageDir+'/'+element.name.split('.')[0]+'.pdf'));
       });
     } else {
       const pages = exportImages.map(image => image.url);
-      imgToPDF(pages, imgToPDF.sizes.A4).pipe(fs.createWriteStream(imageDir+'/'+imagesettingData.prefix+'.pdf'));
+      // imgToPDF(pages, imgToPDF.sizes.A4).pipe(fs.createWriteStream(imageDir+'/'+imagesettingData.prefix+'.pdf'));
     }
 
   }
