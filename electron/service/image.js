@@ -1,7 +1,7 @@
 "use strict";
 
 const Service = require("ee-core").Service;
-const sharp = require('sharp');
+// const sharp = require('sharp');
 const axios = require('axios');
 const fs = require("fs");
 const path = require("path");
@@ -52,6 +52,7 @@ class ImageService extends Service {
   
   async cropImage(rotate, area, format, workspace, filename, outputfile) {
 
+    /**
     try {
       const filePath = path.join(workspace, filename);
       const outputPath = path.join(workspace, outputfile);
@@ -65,7 +66,7 @@ class ImageService extends Service {
     } catch (err) {
       console.error(err);
       throw (err.message);
-    }
+    }*/
   }
 
 
@@ -73,7 +74,8 @@ class ImageService extends Service {
 
     try {
       console.log('Loading image buffer from ' + filename);
-      return await sharp(filename).jpeg().toBuffer();
+      // return await sharp(filename).jpeg().toBuffer();
+      return "";
     } catch (err) {
       this.app.logger.error('getImageBuffer error: '+  err.message);
     }
